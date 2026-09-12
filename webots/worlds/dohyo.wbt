@@ -1,0 +1,140 @@
+#VRML_SIM R2023b utf8
+
+EXTERNPROTO "../protos/GelatinaNuclear.proto"
+
+WorldInfo {
+  info [
+    "Gelatina Nuclear -- dohyo de mini-sumo reglamentario."
+    "Diametro 770 mm, banda blanca 25 mm, altura 25 mm."
+    "Sistema de coordenadas ENU: x adelante, y babor, z arriba."
+  ]
+  title "Gelatina Nuclear :: dohyo"
+  basicTimeStep 8
+  coordinateSystem "ENU"
+  contactProperties [
+    ContactProperties {
+      material1 "rueda" material2 "dohyo"
+      coulombFriction [ 1.6 ]
+      bounce 0 bounceVelocity 0
+      softCFM 0.0001
+    }
+    ContactProperties {
+      material1 "patin" material2 "dohyo"
+      coulombFriction [ 0.08 ]
+      bounce 0 bounceVelocity 0
+    }
+    ContactProperties {
+      material1 "patin" material2 "patin"
+      coulombFriction [ 0.25 ]
+      bounce 0 bounceVelocity 0
+    }
+    ContactProperties {
+      material1 "rueda" material2 "patin"
+      coulombFriction [ 0.40 ]
+      bounce 0 bounceVelocity 0
+    }
+  ]
+}
+
+Viewpoint {
+  orientation 1 0 0 0.876
+  position 0 -0.90 0.75
+  near 0.05
+  followSmoothness 0.2
+}
+
+Background { skyColor [ 0.09 0.10 0.13 ] }
+
+DirectionalLight { direction 0.35 0.45 -1 intensity 2.4 castShadows TRUE }
+DirectionalLight { direction -0.5 -0.35 -1 intensity 0.9 }
+PointLight { location 0 0 1.1 intensity 3.0 attenuation 0 0 1 castShadows FALSE }
+
+# ===========================================================================
+#  Dohyo: cilindro blanco (fisico) + disco negro superpuesto (solo visual).
+#  El disco negro no tiene boundingObject, asi que no afecta a la fisica pero
+#  si a los sensores infrarrojos, que es exactamente lo que queremos: la banda
+#  blanca de 25 mm es lo unico que los sensores de linea deben "ver".
+# ===========================================================================
+DEF DOHYO Solid {
+  translation 0 0 -0.0125
+  name "dohyo"
+  contactMaterial "dohyo"
+  children [
+    Pose {
+      rotation 1 0 0 1.5708
+      children [
+        Shape {
+          appearance PBRAppearance { baseColor 1 1 1 roughness 0.55 metalness 0 }
+          geometry Cylinder { radius 0.385 height 0.025 subdivision 96 }
+        }
+      ]
+    }
+    Pose {
+      translation 0 0 0.0125
+      rotation 1 0 0 1.5708
+      children [
+        Shape {
+          appearance PBRAppearance { baseColor 0.018 0.018 0.020 roughness 0.95 metalness 0 }
+          geometry Cylinder { radius 0.360 height 0.0006 subdivision 96 }
+        }
+      ]
+    }
+  ]
+  boundingObject Pose {
+    rotation 1 0 0 1.5708
+    children [ Cylinder { radius 0.385 height 0.025 subdivision 48 } ]
+  }
+}
+
+# ===========================================================================
+#  Suelo exterior: adonde cae el robot expulsado.
+# ===========================================================================
+DEF SUELO Solid {
+  translation 0 0 -0.0305
+  name "suelo"
+  contactMaterial "dohyo"
+  children [
+    Shape {
+      appearance PBRAppearance { baseColor 0.20 0.21 0.24 roughness 0.9 metalness 0 }
+      geometry Box { size 3 3 0.01 }
+    }
+  ]
+  boundingObject Box { size 3 3 0.01 }
+}
+
+# ===========================================================================
+#  Contendientes. Mismo PROTO para ambos: el hardware es identico y lo unico
+#  que decide el combate es el algoritmo.
+# ===========================================================================
+DEF GELATINA GelatinaNuclear {
+  translation -0.15 0.05 0.001
+  rotation 0 0 1 0
+  name "gelatina"
+  controller "gelatina_nuclear"
+  controllerArgs [ ]
+  color 0.78 0.92 0.12
+}
+
+DEF RIVAL GelatinaNuclear {
+  translation 0.15 -0.05 0.001
+  rotation 0 0 1 3.14159
+  name "rival"
+  controller "oponente"
+  controllerArgs [ "charger" ]
+  color 0.90 0.18 0.22
+  bladeColor 0.45 0.45 0.48
+}
+
+# ===========================================================================
+#  Arbitro: coloca a los robots, da la senal de arranque, cuenta los asaltos
+#  y escribe runs/webots_<version>.json para la bitacora.
+# ===========================================================================
+DEF ARBITRO Robot {
+  name "arbitro"
+  controller "arbitro"
+  controllerArgs [ "--rounds", "20", "--rival", "charger" ]
+  supervisor TRUE
+  children [
+    Emitter { name "emisor" channel 1 range -1 }
+  ]
+}

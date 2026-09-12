@@ -1,0 +1,528 @@
+<title>Bitácora Gelatina Nuclear</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=JetBrains+Mono:wght@400;500;700&display=swap">
+<style>
+/* ==========================================================================
+   Gelatina Nuclear -- bitacora de algoritmos
+   Identidad: placa de instrumento de taller. Rotulacion condensada para la
+   estructura, serif de cuaderno para el razonamiento, monoespaciada para todo
+   lo que escupe la maquina. Neutros sesgados al verde del esmalte de maquina
+   herramienta, azul pizarra como color estructural, y semantica aparte.
+   ========================================================================== */
+:root{
+  --fondo:#E3E6E1;
+  --placa:#F1F3EF;
+  --placa-alt:#E9ECE6;
+  --hueco:#D6DAD3;
+  --regla:#C3C8BF;
+  --regla-fuerte:#A8AFA3;
+  --tinta:#1C2220;
+  --tinta-media:#4C544E;
+  --tinta-suave:#6E766F;
+  --azul:#33506E;
+  --azul-vivo:#2B6FA8;
+  --mejora:#2C6F4C;
+  --regresion:#A8412A;
+  --neutro:#8A6A12;
+  --mejora-fondo:#DCE9E0;
+  --regresion-fondo:#F2DFD8;
+  --neutro-fondo:#EFE6CF;
+  --azul-fondo:#DDE4EC;
+  --add-fondo:#DDEBDF;
+  --add-tinta:#1F5537;
+  --del-fondo:#F3DFDA;
+  --del-tinta:#8C3A24;
+  --sombra:0 1px 2px rgba(28,34,32,.09), 0 8px 22px -14px rgba(28,34,32,.35);
+  --r:3px;
+  color-scheme:light dark;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --fondo:#141816;
+    --placa:#1D2321;
+    --placa-alt:#232A27;
+    --hueco:#111513;
+    --regla:#333B37;
+    --regla-fuerte:#48524D;
+    --tinta:#E6EAE5;
+    --tinta-media:#A8B1AB;
+    --tinta-suave:#808A84;
+    --azul:#8FB2D6;
+    --azul-vivo:#6FA8DC;
+    --mejora:#63BE8E;
+    --regresion:#E08064;
+    --neutro:#D4AC48;
+    --mejora-fondo:#1B2E23;
+    --regresion-fondo:#331E18;
+    --neutro-fondo:#2E2717;
+    --azul-fondo:#1B2632;
+    --add-fondo:#16301F;
+    --add-tinta:#84D2A4;
+    --del-fondo:#331B15;
+    --del-tinta:#EE9679;
+    --sombra:0 1px 2px rgba(0,0,0,.4), 0 10px 26px -16px rgba(0,0,0,.8);
+  }
+}
+:root[data-theme="dark"]{
+  --fondo:#141816; --placa:#1D2321; --placa-alt:#232A27; --hueco:#111513;
+  --regla:#333B37; --regla-fuerte:#48524D;
+  --tinta:#E6EAE5; --tinta-media:#A8B1AB; --tinta-suave:#808A84;
+  --azul:#8FB2D6; --azul-vivo:#6FA8DC;
+  --mejora:#63BE8E; --regresion:#E08064; --neutro:#D4AC48;
+  --mejora-fondo:#1B2E23; --regresion-fondo:#331E18; --neutro-fondo:#2E2717;
+  --azul-fondo:#1B2632;
+  --add-fondo:#16301F; --add-tinta:#84D2A4; --del-fondo:#331B15; --del-tinta:#EE9679;
+  --sombra:0 1px 2px rgba(0,0,0,.4), 0 10px 26px -16px rgba(0,0,0,.8);
+}
+
+*{box-sizing:border-box}
+body{
+  background:var(--fondo);
+  color:var(--tinta);
+  font-family:"Source Serif 4",Georgia,"Times New Roman",serif;
+  font-size:16px; line-height:1.6;
+  margin:0; padding:0;
+  -webkit-font-smoothing:antialiased;
+}
+.envoltorio{max-width:1240px; margin:0 auto; padding-inline:20px; padding-block:0 64px}
+
+h1,h2,h3,.rotulo,.pestana,.chip,.tecla{
+  font-family:Oswald,"Arial Narrow",Haettenschweiler,sans-serif;
+  font-weight:600; letter-spacing:.02em;
+}
+.rotulo{
+  font-size:11px; text-transform:uppercase; letter-spacing:.14em;
+  color:var(--tinta-suave); font-weight:500;
+}
+code,pre,.dato,.mono{font-family:"JetBrains Mono",ui-monospace,"SF Mono",Menlo,Consolas,monospace}
+.dato{font-variant-numeric:tabular-nums}
+
+/* ---------------------------------------------------------------- cabecera */
+.cabecera{
+  border-bottom:2px solid var(--regla-fuerte);
+  padding-block:28px 22px;
+  display:flex; flex-wrap:wrap; gap:28px; align-items:flex-start;
+  justify-content:space-between;
+}
+.marca{display:flex; gap:18px; align-items:center; min-width:0}
+.marca h1{
+  margin:2px 0 0; font-size:clamp(30px,5vw,44px); line-height:.98;
+  text-transform:uppercase; letter-spacing:.005em; font-weight:700;
+  text-wrap:balance;
+}
+.marca .sub{margin:6px 0 0; color:var(--tinta-media); font-size:14px}
+.ring{flex:0 0 auto; width:76px; height:76px}
+
+.mando{display:flex; flex-direction:column; align-items:flex-end; gap:14px}
+.tecla{
+  background:var(--placa); color:var(--tinta-media);
+  border:1px solid var(--regla); border-radius:var(--r);
+  padding:7px 13px; font-size:11px; text-transform:uppercase; letter-spacing:.12em;
+  cursor:pointer; line-height:1;
+}
+.tecla:hover{border-color:var(--regla-fuerte); color:var(--tinta)}
+.tecla:focus-visible{outline:2px solid var(--azul-vivo); outline-offset:2px}
+
+.marcadores{display:flex; flex-wrap:wrap; gap:26px}
+.marcador{display:flex; flex-direction:column; gap:3px}
+.marcador .cifra{
+  font-family:Oswald,sans-serif; font-weight:600; font-size:27px; line-height:1;
+  font-variant-numeric:tabular-nums;
+}
+
+/* ------------------------------------------------------------------ curva */
+.curva{
+  margin-top:26px; background:var(--placa); border:1px solid var(--regla);
+  border-radius:var(--r); padding:20px 22px 14px;
+}
+.curva header{display:flex; justify-content:space-between; align-items:baseline; gap:16px; flex-wrap:wrap}
+.curva h2{margin:0; font-size:15px; text-transform:uppercase; letter-spacing:.1em}
+.curva .nota{font-size:13px; color:var(--tinta-suave); font-style:italic}
+.lienzo{width:100%; height:auto; display:block; margin-top:10px; overflow:visible}
+
+/* -------------------------------------------------------------- estructura */
+.disposicion{display:grid; grid-template-columns:250px minmax(0,1fr); gap:28px; margin-top:28px; align-items:start}
+@media (max-width:860px){ .disposicion{grid-template-columns:1fr} }
+
+/* ---------------------------------------------------------------- historia */
+.historia{border-left:2px solid var(--regla); padding-left:0; display:flex; flex-direction:column}
+.historia > .rotulo{padding:0 0 10px 16px}
+.hito{
+  position:relative; display:block; width:100%; text-align:left;
+  background:none; border:0; border-radius:0;
+  padding:11px 12px 12px 16px; cursor:pointer; color:inherit;
+  font-family:inherit; border-bottom:1px solid var(--regla);
+}
+.hito::before{
+  content:""; position:absolute; left:-6px; top:18px;
+  width:9px; height:9px; border-radius:50%;
+  background:var(--fondo); border:2px solid var(--regla-fuerte);
+}
+.hito:hover{background:var(--placa-alt)}
+.hito[aria-current="true"]{background:var(--placa)}
+.hito[aria-current="true"]::before{background:var(--azul-vivo); border-color:var(--azul-vivo)}
+.hito:focus-visible{outline:2px solid var(--azul-vivo); outline-offset:-2px}
+.hito .ver{font-family:Oswald,sans-serif; font-weight:600; font-size:16px; letter-spacing:.03em}
+.hito .tit{display:block; font-size:13.5px; color:var(--tinta-media); line-height:1.35; margin-top:2px}
+.hito .fila{display:flex; align-items:center; gap:8px; flex-wrap:wrap}
+
+/* ------------------------------------------------------------------ chips */
+.chip{
+  display:inline-block; font-size:10px; text-transform:uppercase; letter-spacing:.1em;
+  padding:2.5px 7px; border-radius:2px; line-height:1.4; font-weight:600;
+  background:var(--hueco); color:var(--tinta-media); white-space:nowrap;
+}
+.chip.baseline,.chip.refactor{background:var(--azul-fondo); color:var(--azul)}
+.chip.tuning,.chip.experiment{background:var(--neutro-fondo); color:var(--neutro)}
+.chip.nuevo{background:var(--mejora-fondo); color:var(--mejora)}
+.chip.bugfix,.chip.revert{background:var(--regresion-fondo); color:var(--regresion)}
+.chip.v-mejora{background:var(--mejora-fondo); color:var(--mejora)}
+.chip.v-regresion{background:var(--regresion-fondo); color:var(--regresion)}
+.chip.v-pendiente{background:var(--neutro-fondo); color:var(--neutro)}
+
+/* --------------------------------------------------------------- expediente */
+.expediente{min-width:0; display:flex; flex-direction:column; gap:22px}
+.titular{border-bottom:2px solid var(--regla-fuerte); padding-bottom:16px}
+.titular .linea{display:flex; align-items:baseline; gap:12px; flex-wrap:wrap}
+.titular .num{font-family:Oswald,sans-serif; font-weight:700; font-size:34px; letter-spacing:.01em; line-height:1}
+.titular h2{margin:8px 0 0; font-size:23px; font-weight:600; line-height:1.2; text-wrap:balance; text-transform:none; letter-spacing:0}
+.titular .meta{margin:9px 0 0; font-size:13px; color:var(--tinta-suave)}
+
+.bloque{background:var(--placa); border:1px solid var(--regla); border-radius:var(--r); padding:20px 22px}
+.bloque > h3{
+  margin:0 0 12px; font-size:11px; text-transform:uppercase; letter-spacing:.14em;
+  color:var(--tinta-suave); font-weight:500;
+}
+.razonamiento{display:grid; gap:18px}
+@media (min-width:720px){ .razonamiento{grid-template-columns:1fr 1fr} }
+.razonamiento .campo{display:flex; flex-direction:column; gap:5px; min-width:0}
+.razonamiento .campo p{margin:0; font-size:15.5px; max-width:62ch; line-height:1.62}
+.razonamiento .campo.ancho{grid-column:1/-1}
+
+table{width:100%; border-collapse:collapse; font-size:13.5px}
+.tabla-envoltorio{overflow-x:auto}
+th{
+  text-align:left; font-family:Oswald,sans-serif; font-weight:500; font-size:10.5px;
+  text-transform:uppercase; letter-spacing:.11em; color:var(--tinta-suave);
+  padding:0 12px 7px 0; border-bottom:1px solid var(--regla); white-space:nowrap;
+}
+td{padding:8px 12px 8px 0; border-bottom:1px solid var(--regla); vertical-align:top}
+tr:last-child td{border-bottom:0}
+td.num{font-family:"JetBrains Mono",monospace; font-variant-numeric:tabular-nums; white-space:nowrap}
+.flecha{color:var(--tinta-suave); padding-inline:4px}
+.de{color:var(--del-tinta)} .a{color:var(--add-tinta); font-weight:700}
+
+/* --------------------------------------------------------------- metricas */
+.rivales{display:flex; flex-direction:column; gap:11px}
+.rival{display:grid; grid-template-columns:88px minmax(0,1fr) 96px; gap:12px; align-items:center}
+@media (max-width:520px){ .rival{grid-template-columns:74px minmax(0,1fr) 78px; gap:8px} }
+.rival .nom{font-family:Oswald,sans-serif; font-size:13px; letter-spacing:.04em; text-transform:uppercase; color:var(--tinta-media)}
+.barra{height:14px; background:var(--hueco); border-radius:1px; overflow:hidden}
+.barra span{display:block; height:100%; background:var(--azul-vivo)}
+.rival .cifra{font-family:"JetBrains Mono",monospace; font-size:12.5px; font-variant-numeric:tabular-nums; text-align:right; color:var(--tinta-media)}
+
+/* ------------------------------------------------------------------- diff */
+.diff-cab{display:flex; justify-content:space-between; align-items:baseline; gap:14px; flex-wrap:wrap; margin-bottom:12px}
+.recuento{font-family:"JetBrains Mono",monospace; font-size:12.5px; font-variant-numeric:tabular-nums}
+.recuento .mas{color:var(--add-tinta); font-weight:700}
+.recuento .menos{color:var(--del-tinta); font-weight:700}
+pre.diff{
+  margin:0; background:var(--placa-alt); border:1px solid var(--regla); border-radius:var(--r);
+  font-size:12.5px; line-height:1.55; overflow-x:auto; max-height:560px; overflow-y:auto;
+  padding:0; tab-size:2;
+}
+pre.diff .l{display:block; padding:0 14px; white-space:pre}
+pre.diff .l.mas{background:var(--add-fondo); color:var(--add-tinta)}
+pre.diff .l.menos{background:var(--del-fondo); color:var(--del-tinta)}
+pre.diff .l.trozo{background:var(--azul-fondo); color:var(--azul); font-weight:700}
+pre.diff .l.arch{color:var(--tinta-suave); font-weight:700; padding-top:8px}
+.vacio{font-style:italic; color:var(--tinta-suave); font-size:14px; margin:0}
+
+.ficheros{display:flex; flex-direction:column; gap:0}
+.fichero{display:flex; justify-content:space-between; align-items:baseline; gap:14px; padding:7px 0; border-bottom:1px solid var(--regla); font-size:13px; flex-wrap:wrap}
+.fichero:last-child{border-bottom:0}
+.fichero .ruta{font-family:"JetBrains Mono",monospace; font-size:12.5px; word-break:break-all}
+.fichero .ruta.tocado{color:var(--azul-vivo); font-weight:700}
+.fichero .der{font-family:"JetBrains Mono",monospace; font-size:11.5px; color:var(--tinta-suave); font-variant-numeric:tabular-nums; white-space:nowrap}
+
+.pie{margin-top:44px; padding-top:18px; border-top:1px solid var(--regla); font-size:13px; color:var(--tinta-suave)}
+.pie code{font-size:12.5px; background:var(--hueco); padding:1px 5px; border-radius:2px}
+
+@media (prefers-reduced-motion: reduce){ *{transition:none !important; animation:none !important} }
+</style>
+
+<div class="envoltorio">
+  <header class="cabecera">
+    <div class="marca">
+      <svg class="ring" viewBox="0 0 100 100" role="img" aria-label="Dohyo reglamentario de 770 mm con banda blanca de 25 mm">
+        <circle cx="50" cy="50" r="48" fill="var(--regla-fuerte)"></circle>
+        <circle cx="50" cy="50" r="44.9" fill="var(--tinta)"></circle>
+        <rect x="41.5" y="43.6" width="17" height="1.6" fill="var(--fondo)"></rect>
+        <rect x="41.5" y="54.8" width="17" height="1.6" fill="var(--fondo)"></rect>
+      </svg>
+      <div>
+        <p class="rotulo" style="margin:0">Bitácora de algoritmos · Webots</p>
+        <h1>Gelatina<br>Nuclear</h1>
+        <p class="sub">Mini-sumo · 10 × 10 cm · 500 g · control en C portable</p>
+      </div>
+    </div>
+    <div class="mando">
+      <button class="tecla" id="tema" type="button">Tema</button>
+      <div class="marcadores" id="marcadores"></div>
+    </div>
+  </header>
+
+  <section class="curva">
+    <header>
+      <h2>Curva de aprendizaje</h2>
+      <p class="nota" id="curva-nota"></p>
+    </header>
+    <div id="curva-lienzo"></div>
+  </section>
+
+  <div class="disposicion">
+    <nav class="historia" id="historia" aria-label="Versiones"></nav>
+    <section class="expediente" id="expediente"></section>
+  </div>
+
+  <footer class="pie">
+    <p>Cada entrada la genera <code>tools/gnver.py</code> al registrar una versión.
+    El guardián <code>python3 tools/gnver.py check</code> falla si hay código de control
+    modificado sin versionar, que es lo que mantiene esta bitácora completa.</p>
+  </footer>
+</div>
+
+<script type="application/json" id="datos">{"project": "Gelatina Nuclear", "class": "Mini-sumo 10x10 cm / 500 g", "created": "2026-09-11T20:06:19+02:00", "schema": 1, "versions": [{"version": "v0.1.0", "parent": null, "iteration": 1, "created_at": "2026-09-11T20:34:27+02:00", "author": "claude-opus-5", "kind": "baseline", "title": "Línea base: máquina de estados reactiva con prioridad de borde", "summary": "Primera implementación completa del sistema de control. Define el contrato estable sensores/actuadores (sumo_types.h), separa todos los números sintonizables en params.h, e implementa strategy.c como una máquina de seis estados: WAIT, OPENING, SEARCH, TRACK, ATTACK y EDGE_ESCAPE. La percepción estima el rumbo al rival como centroide ponderado de los cinco sensores frontales en lugar de quedarse con el sensor que más se dispara. El algoritmo no incluye ni una cabecera de Webots: la plataforma entra por hal.h.", "rationale": "El proyecto va a pasar por n iteraciones y necesita un punto cero honesto contra el que medirlas. Una máquina de estados reactiva es el mínimo que se puede llamar un sumo funcional: es fácil de leer entera, cada decisión es trazable a una línea concreta, y no esconde comportamiento en parámetros aprendidos. Si la iteración 2 gana, sabremos exactamente qué la hizo ganar. La separación estricta entre algoritmo, parámetros y plataforma no es limpieza estética: es lo que permite que un cambio de tuning produzca un diff de tres líneas en esta bitácora en lugar de un diff ilegible.", "hypothesis": "Una jerarquía estricta de prioridades (no caerse > empujar > acercarse > buscar) basta para ganar a un rival inmóvil y a uno que gire sobre sí mismo, pero no a un rival que embista, porque sin memoria del ring el robot no sabe hacia dónde empujar.", "expected_effect": "Win rate global en torno al 50% sobre el banco de cuatro rivales. Se espera que el punto débil aparezca contra el rival agresivo y en la cantidad de auto-expulsiones.", "risks": "El escape de borde es ciego: retrocede y gira un tiempo fijo sin saber dónde está el centro del ring, aunque la IMU ya está cableada y disponible. En un empujón sostenido, retroceder al ver la línea frontal puede ser justo lo contrario de lo que conviene. La búsqueda tampoco recuerda nada: cada ciclo empieza de cero.", "notes_real_robot": "El limitador de pendiente (slew_per_s = 25) existe para el hardware, no para la simulación: protege el puente en H de las inversiones instantáneas de par. Está calibrado para permitir una inversión completa en 80 ms, que es lo que tarda un motor N20 con reductora en invertir de verdad. El umbral de línea (400) es un valor de simulación y habrá que recalibrarlo contra el sensor real con el controlador arrancado con --calib.", "tags": ["baseline", "webots", "fsm", "c99"], "params_changed": [{"name": "dist_attack_mm", "from": "—", "to": "260", "reason": "Por debajo de 26 cm se considera enganchado y se pasa a empuje máximo; más lejos, la corrección de rumbo aún compensa."}, {"name": "v_attack", "from": "—", "to": "1.00", "reason": "En contacto no hay motivo para reservar par: el empuje es el objetivo."}, {"name": "track_kp", "from": "—", "to": "1.10", "reason": "Ganancia proporcional del rumbo. Baja a propósito: sobregirar pierde el contacto."}, {"name": "escape_back_ms", "from": "—", "to": "300", "reason": "Retroceso suficiente para sacar los cuatro sensores de la banda blanca de 25 mm a 0,85 de velocidad."}, {"name": "escape_lockout_ms", "from": "—", "to": "140", "reason": "Ventana ciega tras el escape. Sin ella el robot reentra en EDGE_ESCAPE en bucle sobre la misma línea."}, {"name": "slew_per_s", "from": "—", "to": "25.0", "reason": "Inversión completa de consigna en 80 ms. Protege el hardware real sin estropear el escape de borde."}, {"name": "opening", "from": "—", "to": "OPENING_CHARGE", "reason": "Apertura de embestida recta. Es la más simple y sirve de referencia para comparar aperturas alternativas en iteraciones futuras."}], "states": ["WAIT", "OPENING", "SEARCH", "TRACK", "ATTACK", "EDGE_ESCAPE"], "diff_stat": {"added": 904, "removed": 0, "files": 8, "touched": ["algorithms/params.h", "algorithms/strategy.c", "algorithms/strategy.h", "algorithms/sumo_types.h", "webots/controllers/gelatina_nuclear/Makefile", "webots/controllers/gelatina_nuclear/hal.h", "webots/controllers/gelatina_nuclear/hal_webots.c", "webots/controllers/gelatina_nuclear/main.c"]}, "files": [{"path": "algorithms/params.h", "sha256": "e90a14cd42457adf1aeb0f81aa8c028585553ecd0cc604b22e0b101ad611b4e9", "lines": 104}, {"path": "algorithms/strategy.c", "sha256": "9e2b716aff38f90090bc5c430c61a4948e4328dbe4fbe56a1401c22d872b8e58", "lines": 327}, {"path": "algorithms/strategy.h", "sha256": "18deb074f61ea0092775884b9874be5ce638c59f0934524b1e7c4478353dba41", "lines": 64}, {"path": "algorithms/sumo_types.h", "sha256": "e77803a426bddb91b7b48fea191caa67f244fbd953dcf9eb286f742a7bdd5edc", "lines": 93}, {"path": "webots/controllers/gelatina_nuclear/Makefile", "sha256": "8a82ea41528ff375046f796c67cd6491eddb583301c4b25be4017caa2bdfca65", "lines": 28}, {"path": "webots/controllers/gelatina_nuclear/hal.h", "sha256": "000656c1102cccb97e3daaf5663b28ab2c34d52e4f4db99cc9e7fea7b67e5883", "lines": 37}, {"path": "webots/controllers/gelatina_nuclear/hal_webots.c", "sha256": "5ce3e8c35065751aad0daab67b5799e133b4a79737ccb70523001001c2455694", "lines": 203}, {"path": "webots/controllers/gelatina_nuclear/main.c", "sha256": "987892f69313e5be92e69bc98ae45df8f266ce92b540c9de5d183cfef60b31fc", "lines": 48}], "metrics": {"rounds": 240, "wins": 117, "losses": 63, "draws": 60, "win_rate": 0.488, "avg_win_time_s": 1.57, "self_outs": 19, "opponents": [{"name": "static", "rounds": 60, "wins": 45, "losses": 15, "draws": 0, "win_rate": 0.75}, {"name": "charger", "rounds": 60, "wins": 11, "losses": 46, "draws": 3, "win_rate": 0.183}, {"name": "spinner", "rounds": 60, "wins": 60, "losses": 0, "draws": 0, "win_rate": 1.0}, {"name": "mirror", "rounds": 60, "wins": 1, "losses": 2, "draws": 57, "win_rate": 0.017}]}, "verdict": "pendiente", "diff": "--- vacio/algorithms/params.h\n+++ v0.1.0/algorithms/params.h\n@@ -0,0 +1,104 @@\n+/* ==========================================================================\n+ *  params.h  --  Todos los numeros sintonizables del robot, en un solo sitio\n+ *\n+ *  Por que un fichero aparte: en la bitacora de versiones, una iteracion de\n+ *  tipo \"tuning\" debe producir un diff de tres lineas legible de un vistazo.\n+ *  Si los numeros magicos viven dentro de strategy.c, el diff se vuelve ruido\n+ *  y se pierde el objetivo del proyecto: entender QUE toco la IA y POR QUE.\n+ *\n+ *  Regla de la bitacora: cambiar un numero de aqui = version \"tuning\" (patch).\n+ *  Anadir un campo nuevo = version \"new-behavior\" (minor).\n+ * ========================================================================== */\n+#ifndef SUMO_PARAMS_H\n+#define SUMO_PARAMS_H\n+\n+#include \u003cstdint.h>\n+#include \"sumo_types.h\"\n+\n+/* Aperturas de partida. El primer segundo decide muchos combates. */\n+typedef enum {\n+  OPENING_CHARGE = 0,   /* embestida recta inmediata                        */\n+  OPENING_ARC_L  = 1,   /* arco a babor buscando el flanco del rival        */\n+  OPENING_ARC_R  = 2,   /* arco a estribor                                  */\n+  OPENING_SCAN   = 3    /* giro en el sitio hasta enganchar y luego atacar   */\n+} sumo_opening_t;\n+\n+typedef struct {\n+  /* ---- periodo de control ------------------------------------------- */\n+  uint16_t dt_ms;                 /* periodo del lazo, ms                  */\n+\n+  /* ---- percepcion ---------------------------------------------------- */\n+  uint16_t dist_valid_max_mm;     /* por encima, se ignora la lectura      */\n+  uint16_t dist_attack_mm;        /* rival \"enganchado\": empuje a fondo    */\n+  uint16_t dist_track_mm;         /* rival a la vista: persecucion         */\n+  uint16_t target_hold_ms;        /* histeresis: sigo creyendo que esta ahi*/\n+\n+  /* ---- velocidades normalizadas [0..1] ------------------------------- */\n+  float v_attack;\n+  float v_track;\n+  float v_search;\n+  float v_escape;\n+  float v_opening;\n+\n+  /* ---- seguimiento --------------------------------------------------- */\n+  float track_kp;                 /* rad^-1, error de rumbo -> diferencial */\n+  float track_max_diff;           /* tope del termino diferencial          */\n+\n+  /* ---- escape de borde (maxima prioridad) ----------------------------- */\n+  uint16_t escape_back_ms;        /* retroceso tras ver linea frontal      */\n+  uint16_t escape_turn_ms;        /* giro de reencuadre                    */\n+  uint16_t escape_lockout_ms;     /* ventana ciega para no reentrar al borde*/\n+\n+  /* ---- busqueda ------------------------------------------------------- */\n+  uint16_t search_spin_ms;        /* giro en el sitio                      */\n+  uint16_t search_probe_ms;       /* avance corto entre giros              */\n+  float    search_turn_ratio;     /* -1 = sobre si mismo, 0 = recto        */\n+\n+  /* ---- apertura -------------------------------------------------------- */\n+  sumo_opening_t opening;\n+  uint16_t       opening_ms;      /* duracion de la apertura               */\n+\n+  /* ---- proteccion del tren motriz -------------------------------------- */\n+  float slew_per_s;               /* cambio maximo de consigna por segundo */\n+  float deadband;                 /* consignas por debajo -> 0             */\n+} sumo_params_t;\n+\n+\n+static inline sumo_params_t sumo_params_default(void)\n+{\n+  sumo_params_t p;\n+\n+  p.dt_ms               = 8;\n+\n+  p.dist_valid_max_mm   = 800;\n+  p.dist_attack_mm      = 260;\n+  p.dist_track_mm       = 700;\n+  p.target_hold_ms      = 260;\n+\n+  p.v_attack            = 1.00f;\n+  p.v_track             = 0.72f;\n+  p.v_search            = 0.55f;\n+  p.v_escape            = 0.85f;\n+  p.v_opening           = 0.80f;\n+\n+  p.track_kp            = 1.10f;\n+  p.track_max_diff      = 0.85f;\n+\n+  p.escape_back_ms      = 300;\n+  p.escape_turn_ms      = 360;\n+  p.escape_lockout_ms   = 140;\n+\n+  p.search_spin_ms      = 520;\n+  p.search_probe_ms     = 300;\n+  p.search_turn_ratio   = -0.85f;\n+\n+  p.opening             = OPENING_CHARGE;\n+  p.opening_ms          = 420;\n+\n+  p.slew_per_s          = 25.0f;\n+  p.deadband            = 0.04f;\n+\n+  return p;\n+}\n+\n+#endif /* SUMO_PARAMS_H */\n\n--- vacio/algorithms/strategy.c\n+++ v0.1.0/algorithms/strategy.c\n@@ -0,0 +1,327 @@\n+/* ==========================================================================\n+ *  strategy.c  --  Cerebro de Gelatina Nuclear\n+ *  ------------------------------------------------------------------------\n+ *  LINEA BASE (v0.1.0): maquina de estados reactiva con prioridad absoluta\n+ *  del borde. Sin memoria del rival, sin modelo del ring, sin aprendizaje.\n+ *  Es deliberadamente simple: es el punto de partida contra el que se mediran\n+ *  todas las iteraciones siguientes de la bitacora.\n+ *\n+ *  Prioridades, de mayor a menor:\n+ *     1. No caerse del ring      -> ST_EDGE_ESCAPE\n+ *     2. Empujar si lo tengo     -> ST_ATTACK\n+ *     3. Acercarme si lo veo     -> ST_TRACK\n+ *     4. Encontrarlo             -> ST_SEARCH / ST_OPENING\n+ *\n+ *  Este fichero NO incluye cabeceras de Webots ni de ningun microcontrolador.\n+ * ========================================================================== */\n+\n+#include \"strategy.h\"\n+\n+#include \u003cmath.h>\n+#include \u003cstring.h>\n+\n+#define STRATEGY_VERSION_STR \"v0.1.0\"\n+\n+#ifndef M_PI\n+#define M_PI 3.14159265358979323846\n+#endif\n+\n+/* Angulo de montaje real de los cinco sensores frontales. */\n+const int16_t SUMO_DIST_ANGLE_CDEG[SUMO_N_DIST] = {\n+  6000, 3000, 0, -3000, -6000\n+};\n+\n+static const char *const STATE_NAMES[ST_COUNT] = {\n+  \"WAIT\", \"OPENING\", \"SEARCH\", \"TRACK\", \"ATTACK\", \"EDGE_ESCAPE\"\n+};\n+\n+\n+/* ==========================================================================\n+ *  Utilidades numericas\n+ * ========================================================================== */\n+\n+static float clampf(float v, float lo, float hi)\n+{\n+  return v \u003c lo ? lo : (v > hi ? hi : v);\n+}\n+\n+static float slew(float prev, float target, float max_step)\n+{\n+  const float d = target - prev;\n+  if (d >  max_step) return prev + max_step;\n+  if (d \u003c -max_step) return prev - max_step;\n+  return target;\n+}\n+\n+static uint32_t in_state_ms(const sumo_strategy_t *st)\n+{\n+  return st->t_ms - st->t_state_ms;\n+}\n+\n+static void enter(sumo_strategy_t *st, sumo_state_t s)\n+{\n+  if (st->state == s) return;\n+  st->state = s;\n+  st->t_state_ms = st->t_ms;\n+}\n+\n+\n+/* ==========================================================================\n+ *  Percepcion: de lecturas crudas a \"donde esta el rival\"\n+ * ==========================================================================\n+ *  El rumbo se estima como centroide ponderado de los sensores que ven algo:\n+ *  cuanto mas cerca esta una lectura, mas pesa su angulo de montaje. Con cinco\n+ *  sensores esto da una resolucion angular muy superior a \"cual se dispara\",\n+ *  y sale gratis en computo (cinco multiplicaciones).\n+ * ========================================================================== */\n+\n+static void perceive(sumo_strategy_t *st, const sumo_sensors_t *s)\n+{\n+  const sumo_params_t *p = &st->p;\n+  sumo_percept_t *per = &st->per;\n+\n+  uint32_t w_sum = 0;\n+  int32_t  w_ang = 0;\n+  uint16_t nearest = SUMO_DIST_NONE;\n+\n+  for (int i = 0; i \u003c SUMO_N_DIST; ++i) {\n+    const uint16_t d = s->dist_mm[i];\n+    if (d == SUMO_DIST_NONE || d > p->dist_valid_max_mm) continue;\n+\n+    /* peso lineal inverso: 1 en la cara del robot, 0 al limite util */\n+    const uint32_t w = (uint32_t)(p->dist_valid_max_mm - d) + 1u;\n+    w_sum += w;\n+    w_ang += (int32_t)w * (int32_t)SUMO_DIST_ANGLE_CDEG[i];\n+    if (d \u003c nearest) nearest = d;\n+  }\n+\n+  if (w_sum > 0u) {\n+    per->target_seen         = true;\n+    per->target_dist_mm      = nearest;\n+    per->target_bearing_cdeg = (int16_t)(w_ang / (int32_t)w_sum);\n+    per->last_seen_ms        = s->t_ms;\n+  } else if (per->last_seen_ms != 0u &&\n+             (s->t_ms - per->last_seen_ms) \u003c p->target_hold_ms) {\n+    /* histeresis: el rival no desaparece porque un sensor parpadee un ciclo */\n+    per->target_seen = true;\n+  } else {\n+    per->target_seen    = false;\n+    per->target_dist_mm = SUMO_DIST_NONE;\n+  }\n+\n+  per->line_mask = 0u;\n+  for (int i = 0; i \u003c SUMO_N_LINE; ++i)\n+    if (s->line[i]) per->line_mask |= (uint8_t)(1u \u003c\u003c i);\n+}\n+\n+\n+/* ==========================================================================\n+ *  Escape de borde\n+ * ==========================================================================\n+ *  La regla mas cara de romper del sumo: el que toca el blanco primero pierde.\n+ *  Por eso este bloque interrumpe cualquier otro estado, incluso un empuje\n+ *  ganador. La direccion de huida se deduce de QUE esquinas vieron blanco.\n+ * ========================================================================== */\n+\n+static void plan_escape(sumo_strategy_t *st)\n+{\n+  const uint8_t m = st->per.line_mask;\n+  const bool front = (m & SUMO_LINE_FRONT_MASK) != 0u;\n+  const bool rear  = (m & SUMO_LINE_REAR_MASK)  != 0u;\n+  const bool left  = (m & SUMO_LINE_LEFT_MASK)  != 0u;\n+  const bool right = (m & SUMO_LINE_RIGHT_MASK) != 0u;\n+\n+  if (rear && !front)      st->esc_drive = +1.0f;  /* borde detras: tirar hacia delante */\n+  else                     st->esc_drive = -1.0f;  /* borde delante o rodeado: atras    */\n+\n+  if (left && !right)      st->esc_turn = -1.0f;   /* blanco a babor  -> huir a estribor */\n+  else if (right && !left) st->esc_turn = +1.0f;   /* blanco a estribor -> huir a babor  */\n+  else                     st->esc_turn = (st->edge_events & 1u) ? +1.0f : -1.0f;\n+\n+  st->esc_phase = 0u;\n+  st->edge_events++;\n+  enter(st, ST_EDGE_ESCAPE);\n+  st->t_state_ms = st->t_ms;   /* reinicia el cronometro aunque ya estuviera aqui */\n+}\n+\n+\n+/* ==========================================================================\n+ *  Mezclador: (avance, giro) -> consignas de rueda, con rampa y zona muerta\n+ * ========================================================================== */\n+\n+static void drive(sumo_strategy_t *st, float fwd, float turn, sumo_actuators_t *a)\n+{\n+  const float max_step = st->p.slew_per_s * ((float)st->p.dt_ms / 1000.0f);\n+\n+  float l = clampf(fwd - turn, -1.0f, 1.0f);\n+  float r = clampf(fwd + turn, -1.0f, 1.0f);\n+\n+  l = slew(st->prev_left,  l, max_step);\n+  r = slew(st->prev_right, r, max_step);\n+\n+  st->prev_left  = l;\n+  st->prev_right = r;\n+\n+  if (fabsf(l) \u003c st->p.deadband) l = 0.0f;\n+  if (fabsf(r) \u003c st->p.deadband) r = 0.0f;\n+\n+  a->left  = l;\n+  a->right = r;\n+  a->led   = (uint8_t)st->state;\n+}\n+\n+\n+/* ==========================================================================\n+ *  API publica\n+ * ========================================================================== */\n+\n+void strategy_init(sumo_strategy_t *st, const sumo_params_t *p)\n+{\n+  memset(st, 0, sizeof(*st));\n+  st->p = p ? *p : sumo_params_default();\n+  st->state = ST_WAIT;\n+  st->per.target_dist_mm = SUMO_DIST_NONE;\n+}\n+\n+\n+void strategy_step(sumo_strategy_t *st, const sumo_sensors_t *s, sumo_actuators_t *a)\n+{\n+  st->t_ms = s->t_ms;\n+  perceive(st, s);\n+\n+  /* --- 0. Sin permiso de arranque: quieto y con el lazo reiniciado ------- */\n+  if (!s->armed) {\n+    enter(st, ST_WAIT);\n+    st->prev_left = st->prev_right = 0.0f;\n+    a->left = a->right = 0.0f;\n+    a->led  = (uint8_t)ST_WAIT;\n+    return;\n+  }\n+  if (st->state == ST_WAIT) {\n+    enter(st, ST_OPENING);\n+    st->t_state_ms = st->t_ms;\n+  }\n+\n+  /* --- 1. Prioridad absoluta: el borde ---------------------------------- */\n+  const bool lockout = (st->t_ms \u003c st->t_edge_clear_ms);\n+  if (st->per.line_mask != 0u && !lockout && st->state != ST_EDGE_ESCAPE)\n+    plan_escape(st);\n+\n+  const sumo_params_t *p = &st->p;\n+  const float bearing_rad =\n+      (float)st->per.target_bearing_cdeg / 100.0f * (float)(M_PI / 180.0);\n+\n+  switch (st->state) {\n+\n+  /* ---------------------------------------------------------------- */\n+  case ST_EDGE_ESCAPE: {\n+    if (st->esc_phase == 0u) {\n+      /* fase 1: despegarse del borde en linea casi recta */\n+      drive(st, st->esc_drive * p->v_escape, st->esc_turn * 0.15f, a);\n+      if (in_state_ms(st) >= p->escape_back_ms) {\n+        st->esc_phase = 1u;\n+        st->t_state_ms = st->t_ms;\n+      }\n+    } else {\n+      /* fase 2: reencuadrar hacia el centro del ring */\n+      drive(st, 0.0f, st->esc_turn * p->v_escape, a);\n+      if (in_state_ms(st) >= p->escape_turn_ms) {\n+        st->t_edge_clear_ms = st->t_ms + p->escape_lockout_ms;\n+        enter(st, ST_SEARCH);\n+        st->search_probing = false;\n+      }\n+    }\n+    break;\n+  }\n+\n+  /* ---------------------------------------------------------------- */\n+  case ST_OPENING: {\n+    float fwd = p->v_opening, turn = 0.0f;\n+    switch (p->opening) {\n+      case OPENING_CHARGE: turn = 0.0f;  break;\n+      case OPENING_ARC_L:  turn = 0.45f; break;\n+      case OPENING_ARC_R:  turn = -0.45f; break;\n+      case OPENING_SCAN:   fwd = 0.10f; turn = 0.70f; break;\n+    }\n+    drive(st, fwd, turn, a);\n+\n+    /* si aparece el rival, la apertura se abandona al instante */\n+    if (st->per.target_seen && st->per.target_dist_mm \u003c= p->dist_track_mm)\n+      enter(st, ST_TRACK);\n+    else if (in_state_ms(st) >= p->opening_ms)\n+      enter(st, ST_SEARCH);\n+    break;\n+  }\n+\n+  /* ---------------------------------------------------------------- */\n+  case ST_SEARCH: {\n+    if (st->per.target_seen) { enter(st, ST_TRACK); break; }\n+\n+    /* gira hacia el lado donde se vio al rival por ultima vez */\n+    const float dir = (st->per.target_bearing_cdeg >= 0) ? 1.0f : -1.0f;\n+\n+    if (st->search_probing) {\n+      drive(st, p->v_search, 0.0f, a);\n+      if (in_state_ms(st) >= p->search_probe_ms) {\n+        st->search_probing = false;\n+        st->t_state_ms = st->t_ms;\n+      }\n+    } else {\n+      const float fwd = p->v_search * (1.0f + p->search_turn_ratio);\n+      drive(st, fwd, dir * p->v_search, a);\n+      if (in_state_ms(st) >= p->search_spin_ms) {\n+        st->search_probing = true;\n+        st->t_state_ms = st->t_ms;\n+      }\n+    }\n+    break;\n+  }\n+\n+  /* ---------------------------------------------------------------- */\n+  case ST_TRACK: {\n+    if (!st->per.target_seen) {\n+      enter(st, ST_SEARCH);\n+      st->search_probing = false;\n+      break;\n+    }\n+    if (st->per.target_dist_mm \u003c= p->dist_attack_mm) { enter(st, ST_ATTACK); break; }\n+\n+    const float turn = clampf(p->track_kp * bearing_rad,\n+                              -p->track_max_diff, p->track_max_diff);\n+    drive(st, p->v_track, turn, a);\n+    break;\n+  }\n+\n+  /* ---------------------------------------------------------------- */\n+  case ST_ATTACK: {\n+    if (!st->per.target_seen) {\n+      enter(st, ST_SEARCH);\n+      st->search_probing = false;\n+      break;\n+    }\n+    if (st->per.target_dist_mm > p->dist_track_mm) { enter(st, ST_TRACK); break; }\n+\n+    /* en contacto se corrige poco: girar mucho es perder el empuje */\n+    const float turn = clampf(p->track_kp * bearing_rad * 0.35f, -0.30f, 0.30f);\n+    drive(st, p->v_attack, turn, a);\n+    break;\n+  }\n+\n+  /* ---------------------------------------------------------------- */\n+  case ST_WAIT:\n+  default:\n+    drive(st, 0.0f, 0.0f, a);\n+    break;\n+  }\n+}\n+\n+\n+const char *strategy_state_name(sumo_state_t s)\n+{\n+  return (s >= 0 && s \u003c ST_COUNT) ? STATE_NAMES[s] : \"?\";\n+}\n+\n+const char *strategy_version(void)\n+{\n+  return STRATEGY_VERSION_STR;\n+}\n\n--- vacio/algorithms/strategy.h\n+++ v0.1.0/algorithms/strategy.h\n@@ -0,0 +1,64 @@\n+/* ==========================================================================\n+ *  strategy.h  --  API publica del cerebro de Gelatina Nuclear\n+ *\n+ *  Toda la inteligencia del robot vive detras de dos funciones. El backend\n+ *  (Webots, firmware o banco de pruebas) solo rellena sensores, llama a\n+ *  strategy_step() y aplica los actuadores. Nada mas.\n+ * ========================================================================== */\n+#ifndef SUMO_STRATEGY_H\n+#define SUMO_STRATEGY_H\n+\n+#include \"sumo_types.h\"\n+#include \"params.h\"\n+\n+/* Estados de la maquina de combate. El orden importa: se publica como\n+ * indice en actuators.led para poder depurar desde fuera. */\n+typedef enum {\n+  ST_WAIT = 0,      /* inmovil, esperando la senal de arranque       */\n+  ST_OPENING,       /* jugada de apertura, los primeros ~400 ms      */\n+  ST_SEARCH,        /* barrido buscando al rival                     */\n+  ST_TRACK,         /* rival localizado lejos, aproximacion          */\n+  ST_ATTACK,        /* rival enganchado, empuje maximo               */\n+  ST_EDGE_ESCAPE,   /* borde detectado, salvar el combate            */\n+  ST_COUNT\n+} sumo_state_t;\n+\n+/* Percepcion derivada, expuesta para telemetria y depuracion. */\n+typedef struct {\n+  bool     target_seen;        /* hay rival creible ahora mismo      */\n+  uint16_t target_dist_mm;     /* distancia al mas cercano           */\n+  int16_t  target_bearing_cdeg;/* rumbo estimado en centigrados, + = babor */\n+  uint8_t  line_mask;          /* bits segun enum sumo_line_idx      */\n+  uint32_t last_seen_ms;       /* instante del ultimo contacto       */\n+} sumo_percept_t;\n+\n+typedef struct {\n+  sumo_params_t  p;\n+  sumo_state_t   state;\n+  sumo_percept_t per;\n+\n+  uint32_t t_ms;             /* reloj recibido en el ultimo paso      */\n+  uint32_t t_state_ms;       /* instante de entrada al estado actual  */\n+  uint32_t t_edge_clear_ms;  /* fin de la ventana ciega tras un borde */\n+\n+  /* sub-fase del escape de borde */\n+  uint8_t  esc_phase;        /* 0 = retroceder/avanzar, 1 = reencuadrar */\n+  float    esc_turn;         /* signo y fuerza del giro de escape       */\n+  float    esc_drive;        /* +1 avanzar, -1 retroceder               */\n+\n+  /* sub-fase de la busqueda */\n+  bool     search_probing;\n+\n+  /* salida anterior, para el limitador de pendiente */\n+  float    prev_left;\n+  float    prev_right;\n+\n+  uint32_t edge_events;      /* contador de bordes vistos, telemetria */\n+} sumo_strategy_t;\n+\n+void        strategy_init(sumo_strategy_t *st, const sumo_params_t *p);\n+void        strategy_step(sumo_strategy_t *st, const sumo_sensors_t *s, sumo_actuators_t *a);\n+const char *strategy_state_name(sumo_state_t s);\n+const char *strategy_version(void);\n+\n+#endif /* SUMO_STRATEGY_H */\n\n--- vacio/algorithms/sumo_types.h\n+++ v0.1.0/algorithms/sumo_types.h\n@@ -0,0 +1,93 @@\n+/* ==========================================================================\n+ *  sumo_types.h  --  Contrato estable entre el MUNDO y el ALGORITMO\n+ *\n+ *  Este fichero define la unica frontera que ve la estrategia. Ni Webots ni\n+ *  ningun microcontrolador aparecen aqui: la estrategia solo consume un\n+ *  sumo_sensors_t y produce un sumo_actuators_t.\n+ *\n+ *  Consecuencia practica: el mismo strategy.c compila sin cambios en\n+ *      - el controlador de Webots      (backend hal_webots.c)\n+ *      - el firmware del robot real    (backend hal_\u003cmcu>.c, por escribir)\n+ *      - el banco de pruebas nativo    (tests/harness.c)\n+ *\n+ *  Regla: este fichero cambia MUY poco. Cada cambio aqui rompe todos los\n+ *  backends, asi que exige subir version MINOR como minimo.\n+ * ========================================================================== */\n+#ifndef SUMO_TYPES_H\n+#define SUMO_TYPES_H\n+\n+#include \u003cstdint.h>\n+#include \u003cstdbool.h>\n+\n+/* -------------------------------------------------------------------------\n+ *  Geometria del robot (clase mini-sumo: 10 x 10 cm, 500 g)\n+ * ------------------------------------------------------------------------- */\n+#define SUMO_BODY_MM        100.0f   /* lado maximo reglamentario            */\n+#define SUMO_MASS_G         500.0f   /* masa maxima reglamentaria            */\n+#define SUMO_WHEEL_R_M      0.021f   /* radio de rueda                       */\n+#define SUMO_TRACK_M        0.085f   /* distancia entre centros de rueda     */\n+\n+/* -------------------------------------------------------------------------\n+ *  Sensores de distancia: 5 al frente, de izquierda a derecha\n+ *\n+ *          L60   L30   C   R30   R60\n+ *            \\    \\    |    /    /\n+ *             \\    \\   |   /    /\n+ *              +---------------+\n+ *              |   GELATINA    |\n+ * ------------------------------------------------------------------------- */\n+#define SUMO_N_DIST 5\n+enum sumo_dist_idx {\n+  DIST_L60 = 0,   /* +60 grados (a babor)  */\n+  DIST_L30 = 1,   /* +30 grados            */\n+  DIST_C   = 2,   /*   0 grados (proa)     */\n+  DIST_R30 = 3,   /* -30 grados            */\n+  DIST_R60 = 4    /* -60 grados (estribor) */\n+};\n+\n+/* Angulo de montaje de cada sensor, en CENTIGRADOS (1/100 de grado),\n+ * positivo = a babor. int16_t llega a +-327 grados, margen de sobra. */\n+extern const int16_t SUMO_DIST_ANGLE_CDEG[SUMO_N_DIST];\n+\n+/* Valor centinela: no hay nada dentro del alcance util del sensor. */\n+#define SUMO_DIST_NONE  ((uint16_t)0xFFFFu)\n+\n+/* -------------------------------------------------------------------------\n+ *  Sensores de linea: 4 en las esquinas, mirando al suelo\n+ * ------------------------------------------------------------------------- */\n+#define SUMO_N_LINE 4\n+enum sumo_line_idx {\n+  LINE_FL = 0,   /* frontal izquierdo */\n+  LINE_FR = 1,   /* frontal derecho   */\n+  LINE_RL = 2,   /* trasero izquierdo */\n+  LINE_RR = 3    /* trasero derecho   */\n+};\n+\n+#define SUMO_LINE_FRONT_MASK ((1u \u003c\u003c LINE_FL) | (1u \u003c\u003c LINE_FR))\n+#define SUMO_LINE_REAR_MASK  ((1u \u003c\u003c LINE_RL) | (1u \u003c\u003c LINE_RR))\n+#define SUMO_LINE_LEFT_MASK  ((1u \u003c\u003c LINE_FL) | (1u \u003c\u003c LINE_RL))\n+#define SUMO_LINE_RIGHT_MASK ((1u \u003c\u003c LINE_FR) | (1u \u003c\u003c LINE_RR))\n+\n+/* -------------------------------------------------------------------------\n+ *  Entrada de la estrategia\n+ * ------------------------------------------------------------------------- */\n+typedef struct {\n+  uint32_t t_ms;                      /* ms desde la senal de arranque      */\n+  uint16_t dist_mm[SUMO_N_DIST];      /* mm, o SUMO_DIST_NONE               */\n+  bool     line[SUMO_N_LINE];         /* true = borde blanco bajo el sensor */\n+  float    yaw_rad;                   /* rumbo absoluto, IMU                */\n+  float    gyro_z_rads;               /* velocidad de guinada               */\n+  float    wheel_rad[2];              /* [0]=izq [1]=der, angulo acumulado  */\n+  bool     armed;                     /* true tras los 5 s de reglamento    */\n+} sumo_sensors_t;\n+\n+/* -------------------------------------------------------------------------\n+ *  Salida de la estrategia\n+ * ------------------------------------------------------------------------- */\n+typedef struct {\n+  float   left;    /* consigna rueda izquierda, normalizada [-1 .. +1] */\n+  float   right;   /* consigna rueda derecha,   normalizada [-1 .. +1] */\n+  uint8_t led;     /* bitmap de depuracion, opcional                   */\n+} sumo_actuators_t;\n+\n+#endif /* SUMO_TYPES_H */\n\n--- vacio/webots/controllers/gelatina_nuclear/Makefile\n+++ v0.1.0/webots/controllers/gelatina_nuclear/Makefile\n@@ -0,0 +1,28 @@\n+# Controlador de Gelatina Nuclear para Webots.\n+#\n+# strategy.c, strategy.h, params.h y sumo_types.h son ENLACES SIMBOLICOS a\n+# ../../../algorithms/. Asi el algoritmo vive en un solo sitio -el que versiona\n+# la bitacora- y Webots lo compila sin rutas relativas fragiles.\n+# Si los enlaces se pierden (copia a Windows, zip, etc.):  make links\n+\n+C_SOURCES = main.c hal_webots.c strategy.c\n+CFLAGS   += -std=c99 -Wall -Wextra -O2\n+\n+links:\n+\tln -sf ../../../algorithms/strategy.c   strategy.c\n+\tln -sf ../../../algorithms/strategy.h   strategy.h\n+\tln -sf ../../../algorithms/params.h     params.h\n+\tln -sf ../../../algorithms/sumo_types.h sumo_types.h\n+\n+.PHONY: links\n+\n+# El bloque de Webots solo se activa si WEBOTS_HOME existe, para que\n+# 'make links' siga funcionando en una maquina sin Webots instalado.\n+ifeq ($(strip $(WEBOTS_HOME)),)\n+  $(warning WEBOTS_HOME sin definir: solo esta disponible el objetivo 'links')\n+else\n+  space :=\n+  space +=\n+  WEBOTS_HOME_PATH ?= $(subst $(space),\\ ,$(strip $(subst \\,/,$(WEBOTS_HOME))))\n+  include $(WEBOTS_HOME_PATH)/resources/Makefile.include\n+endif\n\n--- vacio/webots/controllers/gelatina_nuclear/hal.h\n+++ v0.1.0/webots/controllers/gelatina_nuclear/hal.h\n@@ -0,0 +1,37 @@\n+/* ==========================================================================\n+ *  hal.h  --  Capa de abstraccion de plataforma\n+ *\n+ *  El algoritmo (algorithms/) no sabe si corre en Webots, en un banco de\n+ *  pruebas o en un microcontrolador. Solo existe este contrato de seis\n+ *  funciones. Portar Gelatina Nuclear al robot real consiste EXCLUSIVAMENTE\n+ *  en escribir un hal_\u003cplataforma>.c nuevo: ni una linea de strategy.c cambia.\n+ *\n+ *  Backends existentes:\n+ *      hal_webots.c   -> simulacion              (este directorio)\n+ *      tests/harness.c -> banco nativo, integrado (no usa hal.h)\n+ *      hal_\u003cmcu>.c    -> pendiente, robot real\n+ * ========================================================================== */\n+#ifndef SUMO_HAL_H\n+#define SUMO_HAL_H\n+\n+#include \"sumo_types.h\"\n+\n+/* Inicializa la plataforma. Devuelve false si algo imprescindible falta. */\n+bool hal_init(int argc, char **argv);\n+\n+/* Periodo real del lazo de control en ms (lo impone la plataforma). */\n+uint16_t hal_period_ms(void);\n+\n+/* Avanza un paso y rellena los sensores. false = la plataforma pide parar. */\n+bool hal_poll(sumo_sensors_t *s);\n+\n+/* Aplica las consignas normalizadas a los motores. */\n+void hal_apply(const sumo_actuators_t *a);\n+\n+/* Traza de depuracion (printf en simulacion, UART en el robot real). */\n+void hal_log(const char *fmt, ...);\n+\n+/* Libera la plataforma. */\n+void hal_shutdown(void);\n+\n+#endif /* SUMO_HAL_H */\n\n--- vacio/webots/controllers/gelatina_nuclear/hal_webots.c\n+++ v0.1.0/webots/controllers/gelatina_nuclear/hal_webots.c\n@@ -0,0 +1,203 @@\n+/* ==========================================================================\n+ *  hal_webots.c  --  Backend de Webots para Gelatina Nuclear\n+ *\n+ *  Traduce entre la API de Webots y el contrato sumo_types.h. Aqui viven\n+ *  TODOS los detalles sucios: nombres de dispositivos, unidades, umbrales de\n+ *  calibracion y la senal de arranque del arbitro. Nada de esto contamina el\n+ *  algoritmo.\n+ * ========================================================================== */\n+\n+#include \"hal.h\"\n+\n+#include \u003cwebots/robot.h>\n+#include \u003cwebots/motor.h>\n+#include \u003cwebots/distance_sensor.h>\n+#include \u003cwebots/position_sensor.h>\n+#include \u003cwebots/inertial_unit.h>\n+#include \u003cwebots/gyro.h>\n+#include \u003cwebots/receiver.h>\n+#include \u003cwebots/led.h>\n+\n+#include \u003cmath.h>\n+#include \u003cstdarg.h>\n+#include \u003cstdio.h>\n+#include \u003cstdlib.h>\n+#include \u003cstring.h>\n+\n+/* ---- calibracion de la plataforma -------------------------------------- */\n+#define WHEEL_MAX_RADS   75.0    /* consigna 1.0 -> 75 rad/s (motor: 80 max) */\n+#define DIST_MAX_RAW   1190.0    /* por encima de esto, no hay objetivo      */\n+#define LINE_TH_DEFAULT   400    /* blanco ~900, negro ~20: umbral holgado   */\n+#define AUTO_ARM_MS      5000    /* reglamento: 5 s. Solo si no hay arbitro. */\n+\n+static const char *DIST_NAMES[SUMO_N_DIST] = { \"d_l60\", \"d_l30\", \"d_c\", \"d_r30\", \"d_r60\" };\n+static const char *LINE_NAMES[SUMO_N_LINE] = { \"l_fl\", \"l_fr\", \"l_rl\", \"l_rr\" };\n+\n+static int  g_step_ms   = 8;\n+static int  g_line_th   = LINE_TH_DEFAULT;\n+static bool g_calib     = false;\n+static bool g_armed     = false;\n+static bool g_saw_ref   = false;   /* hemos oido alguna vez al arbitro */\n+static double g_t0_ms   = 0.0;\n+\n+static WbDeviceTag g_mot[2];\n+static WbDeviceTag g_enc[2];\n+static WbDeviceTag g_dist[SUMO_N_DIST];\n+static WbDeviceTag g_line[SUMO_N_LINE];\n+static WbDeviceTag g_imu, g_gyro, g_rx, g_led;\n+static bool g_has_imu, g_has_gyro, g_has_rx, g_has_led;\n+\n+\n+bool hal_init(int argc, char **argv)\n+{\n+  wb_robot_init();\n+  g_step_ms = (int)wb_robot_get_basic_time_step();\n+\n+  for (int i = 1; i \u003c argc; ++i) {\n+    if (!strcmp(argv[i], \"--line-th\") && i + 1 \u003c argc) g_line_th = atoi(argv[++i]);\n+    else if (!strcmp(argv[i], \"--calib\")) g_calib = true;\n+  }\n+\n+  g_mot[0] = wb_robot_get_device(\"motor_izq\");\n+  g_mot[1] = wb_robot_get_device(\"motor_der\");\n+  g_enc[0] = wb_robot_get_device(\"enc_izq\");\n+  g_enc[1] = wb_robot_get_device(\"enc_der\");\n+  for (int i = 0; i \u003c 2; ++i) {\n+    wb_motor_set_position(g_mot[i], INFINITY);   /* modo velocidad */\n+    wb_motor_set_velocity(g_mot[i], 0.0);\n+    wb_position_sensor_enable(g_enc[i], g_step_ms);\n+  }\n+\n+  for (int i = 0; i \u003c SUMO_N_DIST; ++i) {\n+    g_dist[i] = wb_robot_get_device(DIST_NAMES[i]);\n+    wb_distance_sensor_enable(g_dist[i], g_step_ms);\n+  }\n+  for (int i = 0; i \u003c SUMO_N_LINE; ++i) {\n+    g_line[i] = wb_robot_get_device(LINE_NAMES[i]);\n+    wb_distance_sensor_enable(g_line[i], g_step_ms);\n+  }\n+\n+  g_imu  = wb_robot_get_device(\"imu\");    g_has_imu  = (g_imu  != 0);\n+  g_gyro = wb_robot_get_device(\"giro\");   g_has_gyro = (g_gyro != 0);\n+  g_rx   = wb_robot_get_device(\"receptor\"); g_has_rx = (g_rx   != 0);\n+  g_led  = wb_robot_get_device(\"led\");    g_has_led  = (g_led  != 0);\n+  if (g_has_imu)  wb_inertial_unit_enable(g_imu, g_step_ms);\n+  if (g_has_gyro) wb_gyro_enable(g_gyro, g_step_ms);\n+  if (g_has_rx)   wb_receiver_enable(g_rx, g_step_ms);\n+\n+  hal_log(\"HAL Webots listo: paso %d ms, umbral de linea %d\", g_step_ms, g_line_th);\n+  return true;\n+}\n+\n+\n+uint16_t hal_period_ms(void) { return (uint16_t)g_step_ms; }\n+\n+\n+/* Vacia el buzon del arbitro. Protocolo de texto plano, canal 1:\n+ *   \"ARM\"  -> empieza el asalto (reinicia el reloj del algoritmo)\n+ *   \"STOP\" -> alto el fuego, el arbitro esta recolocando a los robots      */\n+static void drain_referee(void)\n+{\n+  if (!g_has_rx) return;\n+  while (wb_receiver_get_queue_length(g_rx) > 0) {\n+    const char *msg = (const char *)wb_receiver_get_data(g_rx);\n+    g_saw_ref = true;\n+    if (msg && !strncmp(msg, \"ARM\", 3)) {\n+      if (!g_armed) g_t0_ms = wb_robot_get_time() * 1000.0;\n+      g_armed = true;\n+    } else if (msg && !strncmp(msg, \"STOP\", 4)) {\n+      g_armed = false;\n+    }\n+    wb_receiver_next_packet(g_rx);\n+  }\n+}\n+\n+\n+bool hal_poll(sumo_sensors_t *s)\n+{\n+  if (wb_robot_step(g_step_ms) == -1) return false;\n+\n+  drain_referee();\n+  const double now_ms = wb_robot_get_time() * 1000.0;\n+\n+  /* Sin arbitro en el mundo, el robot se arma solo tras los 5 s de reglamento\n+   * para que el mundo siga siendo util abriendolo a pelo. */\n+  if (!g_saw_ref && !g_armed && now_ms >= AUTO_ARM_MS) {\n+    g_armed = true;\n+    g_t0_ms = now_ms;\n+    hal_log(\"sin arbitro: auto-arranque a los %.0f ms\", now_ms);\n+  }\n+\n+  memset(s, 0, sizeof(*s));\n+  s->armed = g_armed;\n+  s->t_ms  = g_armed ? (uint32_t)(now_ms - g_t0_ms) : 0u;\n+\n+  for (int i = 0; i \u003c SUMO_N_DIST; ++i) {\n+    const double raw = wb_distance_sensor_get_value(g_dist[i]);\n+    s->dist_mm[i] = (raw >= DIST_MAX_RAW) ? SUMO_DIST_NONE : (uint16_t)raw;\n+  }\n+\n+  for (int i = 0; i \u003c SUMO_N_LINE; ++i) {\n+    const double raw = wb_distance_sensor_get_value(g_line[i]);\n+    s->line[i] = (raw > (double)g_line_th);\n+  }\n+\n+  if (g_has_imu) {\n+    const double *rpy = wb_inertial_unit_get_roll_pitch_yaw(g_imu);\n+    s->yaw_rad = (float)rpy[2];\n+  }\n+  if (g_has_gyro) {\n+    const double *g = wb_gyro_get_values(g_gyro);\n+    s->gyro_z_rads = (float)g[2];\n+  }\n+  s->wheel_rad[0] = (float)wb_position_sensor_get_value(g_enc[0]);\n+  s->wheel_rad[1] = (float)wb_position_sensor_get_value(g_enc[1]);\n+\n+  if (g_calib) {\n+    hal_log(\"CALIB linea  FL=%6.1f FR=%6.1f RL=%6.1f RR=%6.1f   dist C=%5u\",\n+            wb_distance_sensor_get_value(g_line[0]),\n+            wb_distance_sensor_get_value(g_line[1]),\n+            wb_distance_sensor_get_value(g_line[2]),\n+            wb_distance_sensor_get_value(g_line[3]),\n+            s->dist_mm[DIST_C]);\n+  }\n+  return true;\n+}\n+\n+\n+static double clamp_unit(double v)\n+{\n+  if (v >  1.0) return  1.0;\n+  if (v \u003c -1.0) return -1.0;\n+  return v;\n+}\n+\n+\n+void hal_apply(const sumo_actuators_t *a)\n+{\n+  const double l = clamp_unit(a->left);\n+  const double r = clamp_unit(a->right);\n+  wb_motor_set_velocity(g_mot[0], l * WHEEL_MAX_RADS);\n+  wb_motor_set_velocity(g_mot[1], r * WHEEL_MAX_RADS);\n+  if (g_has_led) wb_led_set(g_led, (a->led == 4 || a->led == 5) ? 1 : 0);\n+}\n+\n+\n+void hal_log(const char *fmt, ...)\n+{\n+  va_list ap;\n+  printf(\"[%s] \", wb_robot_get_name());\n+  va_start(ap, fmt);\n+  vprintf(fmt, ap);\n+  va_end(ap);\n+  printf(\"\\n\");\n+  fflush(stdout);\n+}\n+\n+\n+void hal_shutdown(void)\n+{\n+  wb_motor_set_velocity(g_mot[0], 0.0);\n+  wb_motor_set_velocity(g_mot[1], 0.0);\n+  wb_robot_cleanup();\n+}\n\n--- vacio/webots/controllers/gelatina_nuclear/main.c\n+++ v0.1.0/webots/controllers/gelatina_nuclear/main.c\n@@ -0,0 +1,48 @@\n+/* ==========================================================================\n+ *  main.c  --  Controlador de Webots para Gelatina Nuclear\n+ *\n+ *  Lazo de control puro. Toda la inteligencia esta en algorithms/strategy.c\n+ *  y todo lo especifico de Webots en hal_webots.c. Este fichero es el mismo\n+ *  que correra en el robot real cambiando unicamente el backend del HAL.\n+ * ========================================================================== */\n+\n+#include \"hal.h\"\n+#include \"strategy.h\"\n+\n+#include \u003cstdio.h>\n+\n+int main(int argc, char **argv)\n+{\n+  if (!hal_init(argc, argv)) return 1;\n+\n+  sumo_params_t p = sumo_params_default();\n+  p.dt_ms = hal_period_ms();          /* el periodo lo impone la plataforma */\n+\n+  sumo_strategy_t brain;\n+  strategy_init(&brain, &p);\n+  hal_log(\"estrategia %s en linea\", strategy_version());\n+\n+  sumo_sensors_t   s;\n+  sumo_actuators_t a = { 0.0f, 0.0f, 0 };\n+  sumo_state_t     last = ST_COUNT;\n+\n+  while (hal_poll(&s)) {\n+    strategy_step(&brain, &s, &a);\n+    hal_apply(&a);\n+\n+    /* Telemetria minima: solo al cambiar de estado, para no inundar la\n+     * consola de Webots. Es la traza que se pega en la bitacora cuando una\n+     * version se comporta de forma inesperada. */\n+    if (brain.state != last) {\n+      last = brain.state;\n+      hal_log(\"t=%5u ms  %-11s  rival=%s d=%4u mm rumbo=%+5d cdeg  linea=0x%X\",\n+              s.t_ms, strategy_state_name(brain.state),\n+              brain.per.target_seen ? \"si\" : \"no\",\n+              brain.per.target_dist_mm == SUMO_DIST_NONE ? 9999u : brain.per.target_dist_mm,\n+              brain.per.target_bearing_cdeg, brain.per.line_mask);\n+    }\n+  }\n+\n+  hal_shutdown();\n+  return 0;\n+}\n"}]}</script>
+<script>
+(function(){
+"use strict";
+const D = JSON.parse(document.getElementById("datos").textContent);
+const V = D.versions || [];
+
+/* ---- tema ------------------------------------------------------------ */
+const raiz = document.documentElement;
+document.getElementById("tema").addEventListener("click", function(){
+  const oscuroAhora = raiz.getAttribute("data-theme") === "dark" ||
+    (!raiz.getAttribute("data-theme") && window.matchMedia("(prefers-color-scheme: dark)").matches);
+  raiz.setAttribute("data-theme", oscuroAhora ? "light" : "dark");
+  pintarCurva();
+});
+
+/* ---- utilidades ------------------------------------------------------ */
+const esc = s => String(s == null ? "" : s)
+  .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+const pct = x => (x == null) ? "—" : (x*100).toFixed(0) + "%";
+const claseTipo = k => ({"new-behavior":"nuevo"})[k] || k;
+const fecha = s => { try { return new Date(s).toLocaleDateString("es-ES",
+  {day:"2-digit",month:"short",year:"numeric"}); } catch(e){ return s; } };
+
+function conMetricas(){ return V.filter(v => (v.metrics||{}).rounds > 0); }
+
+/* ---- marcadores de cabecera ------------------------------------------ */
+(function marcadores(){
+  const m = conMetricas();
+  const ult = V[V.length-1];
+  const ultWr = m.length ? m[m.length-1].metrics.win_rate : null;
+  const prevWr = m.length > 1 ? m[m.length-2].metrics.win_rate : null;
+  let delta = "—", color = "var(--tinta-suave)";
+  if (ultWr != null && prevWr != null) {
+    const d = (ultWr - prevWr) * 100;
+    delta = (d >= 0 ? "+" : "") + d.toFixed(0) + " pp";
+    color = d > 0 ? "var(--mejora)" : (d < 0 ? "var(--regresion)" : "var(--neutro)");
+  } else if (ultWr != null) { delta = "línea base"; color = "var(--azul)"; }
+
+  const filas = [
+    ["Versiones", V.length, "var(--tinta)"],
+    ["Iteración", ult ? ult.iteration : 0, "var(--tinta)"],
+    ["Win rate", ultWr == null ? "—" : pct(ultWr), ultWr == null ? "var(--tinta-suave)" : "var(--azul-vivo)"],
+    ["Respecto a la previa", delta, color]
+  ];
+  document.getElementById("marcadores").innerHTML = filas.map(f =>
+    '<div class="marcador"><span class="rotulo">'+esc(f[0])+'</span>'+
+    '<span class="cifra" style="color:'+f[2]+'">'+esc(f[1])+'</span></div>').join("");
+})();
+
+/* ---- curva de aprendizaje -------------------------------------------- */
+function pintarCurva(){
+  const m = conMetricas();
+  const cont = document.getElementById("curva-lienzo");
+  const nota = document.getElementById("curva-nota");
+  if (!m.length) {
+    cont.innerHTML = '<p class="vacio">Todavía no hay combates registrados. '+
+      'Ejecuta el banco o el árbitro y carga los resultados con <code>gnver metrics</code>.</p>';
+    nota.textContent = "";
+    return;
+  }
+  nota.textContent = m.length === 1
+    ? "Un solo punto: es la referencia contra la que se medirá todo lo demás."
+    : "Tasa de victoria por versión, medida sobre el mismo banco de rivales.";
+
+  const W = 960, H = 230, ml = 46, mr = 108, mt = 16, mb = 34;
+  const iw = W - ml - mr, ih = H - mt - mb;
+  const n = m.length;
+  const px = i => n === 1 ? ml + iw/2 : ml + (i/(n-1))*iw;
+  const py = w => mt + ih - (w||0)*ih;
+
+  let g = "";
+  [0,0.25,0.5,0.75,1].forEach(t => {
+    const y = py(t);
+    g += '<line x1="'+ml+'" y1="'+y+'" x2="'+(ml+iw)+'" y2="'+y+
+         '" stroke="var(--regla)" stroke-width="1"'+(t===0?'':' stroke-dasharray="2 4"')+'></line>'+
+         '<text x="'+(ml-9)+'" y="'+(y+4)+'" text-anchor="end" fill="var(--tinta-suave)" '+
+         'font-family="JetBrains Mono, monospace" font-size="11">'+(t*100)+'%</text>';
+  });
+
+  if (n > 1) {
+    const d = m.map((v,i) => (i?"L":"M")+px(i).toFixed(1)+" "+py(v.metrics.win_rate).toFixed(1)).join(" ");
+    g += '<path d="'+d+'" fill="none" stroke="var(--azul-vivo)" stroke-width="2" '+
+         'stroke-linejoin="round" stroke-linecap="round"></path>';
+  }
+  m.forEach((v,i) => {
+    const x = px(i), y = py(v.metrics.win_rate), ultimo = (i === n-1);
+    g += '<circle cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="'+(ultimo?5.5:4)+
+         '" fill="'+(ultimo?"var(--azul-vivo)":"var(--placa)")+'" stroke="var(--azul-vivo)" stroke-width="2"></circle>'+
+         '<text x="'+x.toFixed(1)+'" y="'+(H-mb+17)+'" text-anchor="middle" fill="var(--tinta-suave)" '+
+         'font-family="Oswald, sans-serif" font-size="11.5" letter-spacing="0.04em">'+esc(v.version)+'</text>';
+    if (ultimo) {
+      g += '<text x="'+(x+12)+'" y="'+(y+4.5)+'" fill="var(--azul-vivo)" '+
+           'font-family="JetBrains Mono, monospace" font-size="13" font-weight="700">'+
+           pct(v.metrics.win_rate)+'</text>';
+    }
+  });
+
+  cont.innerHTML = '<svg class="lienzo" viewBox="0 0 '+W+' '+H+'" role="img" '+
+    'aria-label="Tasa de victoria por versión"><g>'+g+'</g></svg>';
+}
+
+/* ---- carril de versiones --------------------------------------------- */
+function pintarHistoria(sel){
+  const h = document.getElementById("historia");
+  h.innerHTML = '<p class="rotulo">Historial · más reciente arriba</p>' +
+    V.slice().reverse().map(v => {
+      const mt = v.metrics || {};
+      const wr = mt.rounds ? pct(mt.win_rate) : "sin medir";
+      return '<button class="hito" type="button" data-v="'+esc(v.version)+'" '+
+        'aria-current="'+(v.version===sel)+'">'+
+        '<span class="fila"><span class="ver">'+esc(v.version)+'</span>'+
+        '<span class="chip '+esc(claseTipo(v.kind))+'">'+esc(v.kind)+'</span></span>'+
+        '<span class="tit">'+esc(v.title)+'</span>'+
+        '<span class="tit dato" style="color:var(--tinta-suave)">it '+v.iteration+' · '+esc(wr)+'</span>'+
+        '</button>';
+    }).join("");
+  h.querySelectorAll(".hito").forEach(b =>
+    b.addEventListener("click", () => mostrar(b.dataset.v)));
+}
+
+/* ---- diff ------------------------------------------------------------ */
+function pintarDiff(txt){
+  if (!txt || !txt.trim()) return '<p class="vacio">Sin cambios de código en esta entrada.</p>';
+  const lineas = txt.split("\n").map(l => {
+    let c = "l";
+    if (l.startsWith("+++") || l.startsWith("---")) c += " arch";
+    else if (l.startsWith("@@")) c += " trozo";
+    else if (l.startsWith("+")) c += " mas";
+    else if (l.startsWith("-")) c += " menos";
+    return '<span class="'+c+'">'+esc(l || " ")+'</span>';
+  }).join("");
+  return '<pre class="diff">'+lineas+'</pre>';
+}
+
+/* ---- expediente de una versión --------------------------------------- */
+function mostrar(ver){
+  const v = V.find(x => x.version === ver) || V[V.length-1];
+  if (!v) {
+    document.getElementById("expediente").innerHTML =
+      '<div class="bloque"><p class="vacio">La bitácora está vacía. '+
+      'Crea la primera versión con <code>python3 tools/gnver.py new</code>.</p></div>';
+    return;
+  }
+  const mt = v.metrics || {}, ds = v.diff_stat || {added:0,removed:0,files:0,touched:[]};
+  const tocados = new Set(ds.touched || []);
+  let H = "";
+
+  /* titular */
+  H += '<div class="titular"><div class="linea">'+
+       '<span class="num">'+esc(v.version)+'</span>'+
+       '<span class="chip '+esc(claseTipo(v.kind))+'">'+esc(v.kind)+'</span>'+
+       '<span class="chip v-'+esc(v.verdict||"pendiente")+'">'+esc(v.verdict||"pendiente")+'</span>'+
+       '</div><h2>'+esc(v.title)+'</h2>'+
+       '<p class="meta dato">Iteración '+v.iteration+' · '+esc(fecha(v.created_at))+
+       ' · '+esc(v.author)+(v.parent?' · deriva de '+esc(v.parent):' · sin antecesora')+'</p></div>';
+
+  /* razonamiento */
+  const campos = [
+    ["Qué cambió", v.summary, true],
+    ["Por qué", v.rationale, true],
+    ["Hipótesis", v.hypothesis, false],
+    ["Efecto esperado", v.expected_effect, false],
+    ["Riesgos asumidos", v.risks, false],
+    ["Nota para el robot real", v.notes_real_robot, false]
+  ].filter(c => c[1]);
+  H += '<div class="bloque"><h3>Razonamiento</h3><div class="razonamiento">' +
+    campos.map(c => '<div class="campo'+(c[2]?' ancho':'')+'">'+
+      '<span class="rotulo">'+esc(c[0])+'</span><p>'+esc(c[1])+'</p></div>').join("") +
+    '</div></div>';
+
+  /* parametros */
+  if ((v.params_changed||[]).length) {
+    H += '<div class="bloque"><h3>Parámetros tocados</h3><div class="tabla-envoltorio"><table>'+
+      '<thead><tr><th>Parámetro</th><th>Antes</th><th></th><th>Después</th><th>Motivo</th></tr></thead><tbody>'+
+      v.params_changed.map(p => '<tr><td class="num">'+esc(p.name)+'</td>'+
+        '<td class="num de">'+esc(p.from)+'</td><td class="flecha">→</td>'+
+        '<td class="num a">'+esc(p.to)+'</td><td>'+esc(p.reason||"")+'</td></tr>').join("")+
+      '</tbody></table></div></div>';
+  }
+
+  /* metricas */
+  H += '<div class="bloque"><h3>Resultados en el ring</h3>';
+  if (mt.rounds) {
+    const ops = Array.isArray(mt.opponents) ? mt.opponents : [];
+    H += '<div class="marcadores" style="margin-bottom:'+(ops.length?"18px":"0")+'">'+
+      [["Asaltos",mt.rounds,"var(--tinta)"],
+       ["Victorias",mt.wins,"var(--mejora)"],
+       ["Derrotas",mt.losses,"var(--regresion)"],
+       ["Empates",mt.draws,"var(--tinta-media)"],
+       ["Win rate",pct(mt.win_rate),"var(--azul-vivo)"],
+       ["Auto-salidas",mt.self_outs!=null?mt.self_outs:"—","var(--regresion)"],
+       ["Victoria media",mt.avg_win_time_s?mt.avg_win_time_s.toFixed(2)+" s":"—","var(--tinta)"]
+      ].map(f => '<div class="marcador"><span class="rotulo">'+esc(f[0])+'</span>'+
+        '<span class="cifra" style="color:'+f[2]+'">'+esc(f[1])+'</span></div>').join("")+'</div>';
+    if (ops.length) {
+      H += '<span class="rotulo">Desglose por rival</span><div class="rivales" style="margin-top:10px">'+
+        ops.map(o => {
+          const w = Math.max(0, Math.min(1, o.win_rate||0));
+          const col = w >= 0.6 ? "var(--mejora)" : (w >= 0.35 ? "var(--neutro)" : "var(--regresion)");
+          return '<div class="rival"><span class="nom">'+esc(o.name)+'</span>'+
+            '<span class="barra"><span style="width:'+(w*100).toFixed(1)+'%;background:'+col+'"></span></span>'+
+            '<span class="cifra">'+pct(o.win_rate)+' · '+o.wins+'/'+o.rounds+'</span></div>';
+        }).join("")+'</div>';
+    }
+  } else {
+    H += '<p class="vacio">Sin combates registrados todavía en esta versión.</p>';
+  }
+  H += '</div>';
+
+  /* diff */
+  H += '<div class="bloque"><div class="diff-cab"><h3 style="margin:0">Cambio de código</h3>'+
+       '<span class="recuento"><span class="mas">+'+ds.added+'</span> / '+
+       '<span class="menos">−'+ds.removed+'</span> en '+ds.files+' fichero(s)</span></div>'+
+       pintarDiff(v.diff)+'</div>';
+
+  /* ficheros */
+  H += '<div class="bloque"><h3>Estado del árbol de control</h3><div class="ficheros">'+
+    (v.files||[]).map(f => '<div class="fichero">'+
+      '<span class="ruta'+(tocados.has(f.path)?" tocado":"")+'">'+esc(f.path)+'</span>'+
+      '<span class="der">'+f.lines+' líneas · '+esc(String(f.sha256).slice(0,10))+'</span></div>').join("")+
+    '</div></div>';
+
+  document.getElementById("expediente").innerHTML = H;
+  pintarHistoria(v.version);
+  document.querySelectorAll(".hito").forEach(b =>
+    b.setAttribute("aria-current", String(b.dataset.v === v.version)));
+}
+
+pintarCurva();
+mostrar(V.length ? V[V.length-1].version : null);
+})();
+</script>

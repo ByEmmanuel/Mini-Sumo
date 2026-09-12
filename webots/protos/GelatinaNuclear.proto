@@ -1,0 +1,223 @@
+#VRML_SIM R2023b utf8
+# tags: static
+# Gelatina Nuclear -- mini-sumo reglamentario 10 x 10 cm / 500 g
+#
+# Presupuesto dimensional (ENU: x adelante, y babor, z arriba):
+#   largo  chasis -0.050 .. +0.035  +  pala hasta +0.0487   = 98.7 mm  (<= 100)
+#   ancho  ruedas -0.050 .. +0.050                          = 100  mm  (<= 100)
+#   masa   chasis 0.440 + 2 ruedas x 0.030                  = 500  g   (<= 500)
+#
+# Apoyos: 2 ruedas motrices + patin trasero. El centro de masas va 4 mm por
+# detras del eje para que la pala quede libre y casi toda la carga caiga sobre
+# las ruedas (traccion), sin riesgo de volcar hacia atras al empujar.
+
+PROTO GelatinaNuclear [
+  field SFVec3f    translation    0 0 0.001
+  field SFRotation rotation       0 0 1 0
+  field SFString   name           "gelatina"
+  field SFString   controller     "gelatina_nuclear"
+  field MFString   controllerArgs []
+  field SFColor    color          0.78 0.92 0.12
+  field SFColor    bladeColor     0.55 0.57 0.60
+  field SFFloat    bodyMass       0.440
+]
+{
+  Robot {
+    translation IS translation
+    rotation IS rotation
+    name IS name
+    controller IS controller
+    controllerArgs IS controllerArgs
+    contactMaterial "patin"
+    children [
+
+      # ---------------- chasis ----------------
+      Pose {
+        translation -0.0075 0 0.021
+        children [
+          Shape {
+            appearance PBRAppearance { baseColor IS color roughness 0.45 metalness 0.1 }
+            geometry Box { size 0.085 0.070 0.028 }
+          }
+        ]
+      }
+
+      # ---------------- pala frontal (rampa) ----------------
+      Pose {
+        translation 0.038 0 0.0125
+        rotation 0 1 0 0.60
+        children [
+          Shape {
+            appearance PBRAppearance { baseColor IS bladeColor roughness 0.25 metalness 0.85 }
+            geometry Box { size 0.026 0.098 0.005 }
+          }
+        ]
+      }
+
+      # ---------------- patin trasero ----------------
+      Pose {
+        translation -0.046 0 0.004
+        children [
+          Shape {
+            appearance PBRAppearance { baseColor 0.15 0.15 0.15 roughness 0.2 metalness 0 }
+            geometry Sphere { radius 0.004 subdivision 2 }
+          }
+        ]
+      }
+
+      # ---------------- rueda izquierda ----------------
+      HingeJoint {
+        jointParameters HingeJointParameters { axis 0 1 0 anchor -0.010 0.0425 0.021 }
+        device [
+          RotationalMotor { name "motor_izq" maxVelocity 80 maxTorque 0.13 }
+          PositionSensor  { name "enc_izq" }
+        ]
+        endPoint Solid {
+          translation -0.010 0.0425 0.021
+          name "rueda_izq"
+          contactMaterial "rueda"
+          children [
+            Shape {
+              appearance PBRAppearance { baseColor 0.07 0.07 0.08 roughness 0.95 metalness 0 }
+              geometry Cylinder { radius 0.021 height 0.015 subdivision 24 }
+            }
+          ]
+          boundingObject Cylinder { radius 0.021 height 0.015 subdivision 24 }
+          physics Physics { density -1 mass 0.030 }
+        }
+      }
+
+      # ---------------- rueda derecha ----------------
+      HingeJoint {
+        jointParameters HingeJointParameters { axis 0 1 0 anchor -0.010 -0.0425 0.021 }
+        device [
+          RotationalMotor { name "motor_der" maxVelocity 80 maxTorque 0.13 }
+          PositionSensor  { name "enc_der" }
+        ]
+        endPoint Solid {
+          translation -0.010 -0.0425 0.021
+          name "rueda_der"
+          contactMaterial "rueda"
+          children [
+            Shape {
+              appearance PBRAppearance { baseColor 0.07 0.07 0.08 roughness 0.95 metalness 0 }
+              geometry Cylinder { radius 0.021 height 0.015 subdivision 24 }
+            }
+          ]
+          boundingObject Cylinder { radius 0.021 height 0.015 subdivision 24 }
+          physics Physics { density -1 mass 0.030 }
+        }
+      }
+
+      # ================ sensores de distancia ================
+      # Orden y nombres fijados por enum sumo_dist_idx en algorithms/sumo_types.h
+      DistanceSensor {
+        translation 0.030 0.036 0.026
+        rotation 0 0 1 1.0472
+        name "d_l60"
+        type "generic" numberOfRays 3 aperture 0.20
+        lookupTable [ 0 0 0.004, 1.2 1200 0.02 ]
+        children [ Shape { appearance PBRAppearance { baseColor 0.1 0.1 0.12 roughness 0.4 metalness 0 } geometry Box { size 0.007 0.008 0.008 } } ]
+      }
+      DistanceSensor {
+        translation 0.037 0.020 0.026
+        rotation 0 0 1 0.5236
+        name "d_l30"
+        type "generic" numberOfRays 3 aperture 0.20
+        lookupTable [ 0 0 0.004, 1.2 1200 0.02 ]
+        children [ Shape { appearance PBRAppearance { baseColor 0.1 0.1 0.12 roughness 0.4 metalness 0 } geometry Box { size 0.007 0.008 0.008 } } ]
+      }
+      DistanceSensor {
+        translation 0.037 0 0.026
+        rotation 0 0 1 0
+        name "d_c"
+        type "generic" numberOfRays 3 aperture 0.20
+        lookupTable [ 0 0 0.004, 1.2 1200 0.02 ]
+        children [ Shape { appearance PBRAppearance { baseColor 0.1 0.1 0.12 roughness 0.4 metalness 0 } geometry Box { size 0.007 0.008 0.008 } } ]
+      }
+      DistanceSensor {
+        translation 0.037 -0.020 0.026
+        rotation 0 0 1 -0.5236
+        name "d_r30"
+        type "generic" numberOfRays 3 aperture 0.20
+        lookupTable [ 0 0 0.004, 1.2 1200 0.02 ]
+        children [ Shape { appearance PBRAppearance { baseColor 0.1 0.1 0.12 roughness 0.4 metalness 0 } geometry Box { size 0.007 0.008 0.008 } } ]
+      }
+      DistanceSensor {
+        translation 0.030 -0.036 0.026
+        rotation 0 0 1 -1.0472
+        name "d_r60"
+        type "generic" numberOfRays 3 aperture 0.20
+        lookupTable [ 0 0 0.004, 1.2 1200 0.02 ]
+        children [ Shape { appearance PBRAppearance { baseColor 0.1 0.1 0.12 roughness 0.4 metalness 0 } geometry Box { size 0.007 0.008 0.008 } } ]
+      }
+
+      # ================ sensores de linea (IR al suelo) ================
+      # rotation 0 1 0 1.5708 orienta el eje +x del sensor hacia -z (abajo).
+      DistanceSensor {
+        translation 0.040 0.040 0.006
+        rotation 0 1 0 1.5708
+        name "l_fl"
+        type "infra-red" numberOfRays 1 aperture 0.12
+        lookupTable [ 0 1000 0.0, 0.012 900 0.01, 0.030 250 0.03 ]
+      }
+      DistanceSensor {
+        translation 0.040 -0.040 0.006
+        rotation 0 1 0 1.5708
+        name "l_fr"
+        type "infra-red" numberOfRays 1 aperture 0.12
+        lookupTable [ 0 1000 0.0, 0.012 900 0.01, 0.030 250 0.03 ]
+      }
+      DistanceSensor {
+        translation -0.042 0.040 0.006
+        rotation 0 1 0 1.5708
+        name "l_rl"
+        type "infra-red" numberOfRays 1 aperture 0.12
+        lookupTable [ 0 1000 0.0, 0.012 900 0.01, 0.030 250 0.03 ]
+      }
+      DistanceSensor {
+        translation -0.042 -0.040 0.006
+        rotation 0 1 0 1.5708
+        name "l_rr"
+        type "infra-red" numberOfRays 1 aperture 0.12
+        lookupTable [ 0 1000 0.0, 0.012 900 0.01, 0.030 250 0.03 ]
+      }
+
+      # ================ inercial ================
+      InertialUnit { translation 0 0 0.020 name "imu" }
+      Gyro         { translation 0 0 0.020 name "giro" }
+
+      # ================ enlace con el arbitro ================
+      Receiver { name "receptor" channel 1 }
+
+      # ================ testigo de estado ================
+      LED {
+        name "led"
+        children [
+          Pose {
+            translation -0.030 0 0.038
+            children [
+              Shape {
+                appearance PBRAppearance { baseColor 1 1 1 emissiveColor 0 0 0 roughness 0.2 metalness 0 }
+                geometry Sphere { radius 0.005 subdivision 2 }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+
+    boundingObject Group {
+      children [
+        Pose { translation -0.0075 0 0.021 children [ Box { size 0.085 0.070 0.028 } ] }
+        Pose { translation 0.038 0 0.0125 rotation 0 1 0 0.60 children [ Box { size 0.026 0.098 0.005 } ] }
+        Pose { translation -0.046 0 0.004 children [ Sphere { radius 0.004 subdivision 2 } ] }
+      ]
+    }
+    physics Physics {
+      density -1
+      mass IS bodyMass
+      centerOfMass [ -0.014 0 0.015 ]
+    }
+  }
+}
