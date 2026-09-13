@@ -1,0 +1,22 @@
+# Entorno de Python del aprendizaje en GPU (varios GB; se rehace con uv, ver ml/README.md)
+ml/.venv/
+ml/data/cache/
+__pycache__/
+
+# Binarios y objetos que Webots y make generan al compilar los controladores
+webots/controllers/*/build/
+webots/controllers/arbitro/arbitro
+webots/controllers/oponente/oponente
+webots/controllers/gelatina_nuclear/gelatina_nuclear
+webots/controllers/_*/
+
+# Ficheros locales que Webots escribe junto al mundo
+webots/worlds/.*.wbproj
+webots/worlds/.*.jpg
+webots/worlds/_lote_*.wbt
+
+# Binarios de prueba de la exportación a C de las políticas
+ml/data/politicas/*/prueba_nn
+
+# Temporales de las tandas de Webots
+runs/_tmp_*

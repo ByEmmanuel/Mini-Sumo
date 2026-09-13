@@ -53,7 +53,7 @@ KINDS = [
     "revert",        # vuelta atras explicita
 ]
 
-TEXT_EXT = {".c", ".h", ".cpp", ".hpp", ".py", ".md", ".txt", ".json", ".mk", ""}
+TEXT_EXT = {".c", ".h", ".cpp", ".hpp", ".py", ".md", ".txt", ".json", ".mk"}
 
 
 # --------------------------------------------------------------------------
@@ -412,7 +412,12 @@ def cmd_metrics(args):
         data = load_json(Path(args.from_file))
         if data is None:
             die(f"no existe {args.from_file}")
-        e["metrics"] = data.get("metrics", data)
+        # --campo permite guardar una medida adicional (reglamento, Webots)
+        # sin pisar "metrics", que es la tabla oficial de siempre.
+        e[args.campo] = data.get("metrics", data)
+        if args.campo != "metrics":
+            e[args.campo]["engine"] = data.get("engine", "")
+            e[args.campo]["mode"] = data.get("mode", "")
     else:
         mt = e.setdefault("metrics", {})
         for k in ("rounds", "wins", "losses", "draws", "self_outs"):
@@ -488,6 +493,9 @@ def main():
     p = sub.add_parser("metrics", help="carga resultados de combate en una version")
     p.add_argument("version")
     p.add_argument("--from", dest="from_file")
+    p.add_argument("--campo", default="metrics",
+                   help="clave de la entrada donde guardar: metrics (tabla oficial), "
+                        "metrics_reglamento, metrics_webots...")
     p.add_argument("--rounds", type=int)
     p.add_argument("--wins", type=int)
     p.add_argument("--losses", type=int)

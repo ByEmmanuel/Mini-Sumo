@@ -39,6 +39,16 @@ python3 tools/gnver.py metrics vX.Y.Z --from runs/vX.Y.Z.json --verdict mejora
 #    Artifact con url=https://claude.ai/code/artifact/2fe653b8-287f-46ce-abb4-0ef248b5941d
 ```
 
+El torneo usa las colocaciones del reglamento (`REGLAMENTO.md`): mide también
+con `./tests/build/harness --all --rounds 60 --reglamento` y en Webots con
+`python3 tools/webots_reglamento.py --version vX.Y.Z`, y carga esas medidas
+aparte con `gnver metrics vX.Y.Z --from ... --campo metrics_reglamento` (o
+`metrics_webots`). `metrics` sigue siendo la tabla oficial de siempre.
+
+Un ajuste de números también puede salir de la GPU (`ml/README.md`):
+`python -m ml exportar c-XXX` escribe `params.h` y el borrador, pero el porqué
+lo redacta quien registra la versión y Webots decide si es mejora.
+
 `gnver new` y `gnver metrics` regeneran `site/index.html` solos. La página
 publicada vive en el artifact de arriba: **republicar siempre sobre esa URL**,
 nunca crear una nueva, o el usuario pierde el enlace que ya tiene.

@@ -170,5 +170,163 @@
       }
     ]
   },
-  "verdict": "pendiente"
+  "verdict": "pendiente",
+  "metrics_reglamento": {
+    "rounds": 240,
+    "wins": 43,
+    "losses": 139,
+    "draws": 58,
+    "win_rate": 0.179,
+    "avg_win_time_s": 0.95,
+    "self_outs": 105,
+    "match_win_rate": 0.013,
+    "opponents": [
+      {
+        "name": "static",
+        "rounds": 60,
+        "wins": 20,
+        "losses": 40,
+        "draws": 0,
+        "win_rate": 0.333,
+        "placements": [
+          {
+            "name": "frente",
+            "rounds": 20,
+            "wins": 20,
+            "losses": 0,
+            "draws": 0
+          },
+          {
+            "name": "lado",
+            "rounds": 20,
+            "wins": 0,
+            "losses": 20,
+            "draws": 0
+          },
+          {
+            "name": "espalda",
+            "rounds": 20,
+            "wins": 0,
+            "losses": 20,
+            "draws": 0
+          }
+        ],
+        "match": {
+          "win": 0.0,
+          "judges": 0.0,
+          "loss": 1.0
+        }
+      },
+      {
+        "name": "charger",
+        "rounds": 60,
+        "wins": 2,
+        "losses": 58,
+        "draws": 0,
+        "win_rate": 0.033,
+        "placements": [
+          {
+            "name": "frente",
+            "rounds": 20,
+            "wins": 1,
+            "losses": 19,
+            "draws": 0
+          },
+          {
+            "name": "lado",
+            "rounds": 20,
+            "wins": 1,
+            "losses": 19,
+            "draws": 0
+          },
+          {
+            "name": "espalda",
+            "rounds": 20,
+            "wins": 0,
+            "losses": 20,
+            "draws": 0
+          }
+        ],
+        "match": {
+          "win": 0.003,
+          "judges": 0.0,
+          "loss": 0.997
+        }
+      },
+      {
+        "name": "spinner",
+        "rounds": 60,
+        "wins": 20,
+        "losses": 40,
+        "draws": 0,
+        "win_rate": 0.333,
+        "placements": [
+          {
+            "name": "frente",
+            "rounds": 20,
+            "wins": 20,
+            "losses": 0,
+            "draws": 0
+          },
+          {
+            "name": "lado",
+            "rounds": 20,
+            "wins": 0,
+            "losses": 20,
+            "draws": 0
+          },
+          {
+            "name": "espalda",
+            "rounds": 20,
+            "wins": 0,
+            "losses": 20,
+            "draws": 0
+          }
+        ],
+        "match": {
+          "win": 0.0,
+          "judges": 0.0,
+          "loss": 1.0
+        }
+      },
+      {
+        "name": "mirror",
+        "rounds": 60,
+        "wins": 1,
+        "losses": 1,
+        "draws": 58,
+        "win_rate": 0.017,
+        "placements": [
+          {
+            "name": "frente",
+            "rounds": 20,
+            "wins": 0,
+            "losses": 0,
+            "draws": 20
+          },
+          {
+            "name": "lado",
+            "rounds": 20,
+            "wins": 0,
+            "losses": 0,
+            "draws": 20
+          },
+          {
+            "name": "espalda",
+            "rounds": 20,
+            "wins": 1,
+            "losses": 1,
+            "draws": 18
+          }
+        ],
+        "match": {
+          "win": 0.05,
+          "judges": 0.9,
+          "loss": 0.05
+        }
+      }
+    ],
+    "engine": "harness-nativo",
+    "mode": "reglamento"
+  }
 }

@@ -32,6 +32,16 @@
 #define SETTLE_MS      300.0
 #define DEFAULT_TIMEOUT 30.0
 
+/* Colocacion del reglamento (Extras/Reglamento de MINISUMO II, p. 10-11):
+ * centros a 15 cm (10 cm de robot + 5 cm de separacion) sobre un eje de la
+ * cruz central; ronda 1 de frente, 2 de lado en sentidos opuestos, 3 de
+ * espaldas. Tres rondas en tres minutos: 60 s por ronda como tope.
+ * Con --colocacion banco (por defecto) se usa la diagonal a 36 cm de siempre,
+ * para que las metricas anteriores sigan siendo comparables. */
+#define REG_CENTROS  0.150
+#define REG_TIMEOUT  60.0
+static const char *COL_NAME[] = { "banco", "frente", "lado", "espalda" };
+
 typedef struct { WbNodeRef node; WbFieldRef tr, rot; } fighter_t;
 
 static void place(const fighter_t *f, double x, double y, double yaw)
@@ -55,13 +65,43 @@ static void broadcast(WbDeviceTag tx, const char *msg)
   wb_emitter_send(tx, msg, (int)strlen(msg) + 1);
 }
 
+/* Probabilidad de ganar el combate a 3 rondas a partir de la de cada ronda
+ * por colocacion. Misma cuenta que tests/harness.c y ml/sim.py. */
+static void match_prob(const double pw[3], const double pd[3], const double pl[3],
+                       double *win, double *judges, double *loss)
+{
+  double P[3][3] = {{0.0}};
+  double W = 0.0, L = 0.0, D = 0.0;
+  P[0][0] = 1.0;
+  for (int r = 0; r < 3; ++r) {
+    double Q[3][3] = {{0.0}};
+    for (int i = 0; i < 2; ++i)
+      for (int j = 0; j < 2; ++j) {
+        Q[i + 1][j] += P[i][j] * pw[r];
+        Q[i][j]     += P[i][j] * pd[r];
+        Q[i][j + 1] += P[i][j] * pl[r];
+      }
+    for (int j = 0; j < 2; ++j) { W += Q[2][j]; Q[2][j] = 0.0; }
+    for (int i = 0; i < 2; ++i) { L += Q[i][2]; Q[i][2] = 0.0; }
+    memcpy(P, Q, sizeof P);
+  }
+  for (int i = 0; i < 2; ++i)
+    for (int j = 0; j < 2; ++j) {
+      if (i > j)      W += P[i][j];
+      else if (j > i) L += P[i][j];
+      else { W += P[i][j] * pw[0]; L += P[i][j] * pl[0]; D += P[i][j] * pd[0]; }
+    }
+  *win = W; *judges = D; *loss = L;
+}
+
 int main(int argc, char **argv)
 {
   wb_robot_init();
   const int step = (int)wb_robot_get_basic_time_step();
 
   int rounds = 20;
-  double timeout = DEFAULT_TIMEOUT;
+  double timeout = -1.0;
+  bool reg = false;
   const char *out_path = "../../../runs/webots_ultimo.json";
   const char *version  = "WORK";
   const char *rival    = "charger";
@@ -72,7 +112,9 @@ int main(int argc, char **argv)
     else if (!strcmp(argv[i], "--out")     && i + 1 < argc) out_path = argv[++i];
     else if (!strcmp(argv[i], "--version") && i + 1 < argc) version  = argv[++i];
     else if (!strcmp(argv[i], "--rival")   && i + 1 < argc) rival    = argv[++i];
+    else if (!strcmp(argv[i], "--colocacion") && i + 1 < argc) reg = !strcmp(argv[++i], "reglamento");
   }
+  if (timeout <= 0.0) timeout = reg ? REG_TIMEOUT : DEFAULT_TIMEOUT;
 
   fighter_t me = {0}, foe = {0};
   me.node  = wb_supervisor_node_get_from_def("GELATINA");
@@ -90,21 +132,36 @@ int main(int argc, char **argv)
   WbDeviceTag tx = wb_robot_get_device("emisor");
 
   int wins = 0, losses = 0, draws = 0, self_outs = 0;
+  int cw[4] = {0}, cl[4] = {0}, cd[4] = {0};   /* por colocacion */
   double win_time_sum = 0.0;
 
-  printf("\n[arbitro] %d asaltos contra '%s', limite %.0f s por asalto\n",
-         rounds, rival, timeout);
+  printf("\n[arbitro] %d asaltos contra '%s', colocacion %s, limite %.0f s por asalto\n",
+         rounds, rival, reg ? "reglamento" : "banco", timeout);
   fflush(stdout);
 
   for (int k = 0; k < rounds && wb_robot_step(step) != -1; ++k) {
 
     /* --- puesta en escena ------------------------------------------------ */
     broadcast(tx, "STOP");
-    const double base = (k % 2 == 0) ? 0.0 : M_PI / 2.0;
-    const double jit  = ((k * 37) % 17 - 8) * 0.004;   /* +-32 mm determinista */
-    const double r0   = 0.18;
-    place(&me,   r0 * cos(base) + jit,  r0 * sin(base),        base + M_PI);
-    place(&foe, -r0 * cos(base),       -r0 * sin(base) + jit,  base);
+    const int col = reg ? 1 + k % 3 : 0;
+    if (col == 0) {
+      const double base = (k % 2 == 0) ? 0.0 : M_PI / 2.0;
+      const double jit  = ((k * 37) % 17 - 8) * 0.004;   /* +-32 mm determinista */
+      const double r0   = 0.18;
+      place(&me,   r0 * cos(base) + jit,  r0 * sin(base),        base + M_PI);
+      place(&foe, -r0 * cos(base),       -r0 * sin(base) + jit,  base);
+    } else {
+      /* eje de la cruz con orientacion global variada y +-3 mm de mano */
+      const double phi = ((k / 3) * 53 % 360) * M_PI / 180.0;
+      const double h   = 0.5 * REG_CENTROS;
+      const double jit = ((k * 37) % 7 - 3) * 0.001;
+      double ax = cos(phi), ay = sin(phi);
+      if (col == 2) { const double t = ax; ax = -ay; ay = t; }
+      const double yaw_me  = (col == 1) ? phi + M_PI : phi;   /* de frente se miran */
+      const double yaw_foe = (col == 1) ? phi : phi + M_PI;   /* lado y espaldas: opuestos */
+      place(&me,   h * ax + jit,  h * ay,        yaw_me);
+      place(&foe, -h * ax,       -h * ay + jit,  yaw_foe);
+    }
     wb_supervisor_simulation_reset_physics();
 
     const double t_settle_end = wb_robot_get_time() * 1000.0 + SETTLE_MS;
@@ -138,12 +195,12 @@ int main(int argc, char **argv)
     }
     const double dur = wb_robot_get_time() - t_start;
 
-    if (result > 0)      { wins++;   win_time_sum += dur; }
-    else if (result < 0) { losses++; if (!strcmp(reason, "auto-salida")) self_outs++; }
-    else                   draws++;
+    if (result > 0)      { wins++;   win_time_sum += dur; cw[col]++; }
+    else if (result < 0) { losses++; cl[col]++; if (!strcmp(reason, "auto-salida")) self_outs++; }
+    else                 { draws++;  cd[col]++; }
 
-    printf("[arbitro] asalto %2d/%d  %-14s  %+d  %5.2f s\n",
-           k + 1, rounds, reason, result, dur);
+    printf("[arbitro] asalto %2d/%d  %-8s %-14s  %+d  %5.2f s\n",
+           k + 1, rounds, COL_NAME[col], reason, result, dur);
     fflush(stdout);
   }
 
@@ -157,18 +214,42 @@ done:
            wins, losses, draws, wr * 100.0, self_outs,
            wins ? win_time_sum / wins : 0.0);
 
+    /* desglose del reglamento: por colocacion y combate a 3 rondas */
+    char extra[1024] = "", extra_top[96] = "";
+    if (reg) {
+      double pw[3], pd[3], pl[3], mw, mj, ml;
+      size_t o = (size_t)snprintf(extra, sizeof extra, ",\"placements\":[");
+      for (int c = 1; c <= 3; ++c) {
+        const int n = cw[c] + cl[c] + cd[c];
+        pw[c - 1] = n ? (double)cw[c] / n : 0.0;
+        pd[c - 1] = n ? (double)cd[c] / n : 1.0;
+        pl[c - 1] = n ? (double)cl[c] / n : 0.0;
+        printf("[arbitro]   %-8s %dW %dL %dD\n", COL_NAME[c], cw[c], cl[c], cd[c]);
+        o += (size_t)snprintf(extra + o, sizeof extra - o,
+                              "%s{\"name\":\"%s\",\"rounds\":%d,\"wins\":%d,\"losses\":%d,\"draws\":%d}",
+                              c > 1 ? "," : "", COL_NAME[c], n, cw[c], cl[c], cd[c]);
+      }
+      match_prob(pw, pd, pl, &mw, &mj, &ml);
+      printf("[arbitro]   combate: gana %.1f%%  jueces %.1f%%  pierde %.1f%%\n",
+             100.0 * mw, 100.0 * mj, 100.0 * ml);
+      snprintf(extra + o, sizeof extra - o,
+               "],\"match\":{\"win\":%.3f,\"judges\":%.3f,\"loss\":%.3f}", mw, mj, ml);
+      snprintf(extra_top, sizeof extra_top, "    \"match_win_rate\": %.3f,\n", mw);
+    }
+
     FILE *f = fopen(out_path, "w");
     if (f) {
       fprintf(f,
         "{\n  \"version\": \"%s\",\n  \"engine\": \"webots\",\n"
+        "  \"mode\": \"%s\",\n  \"round_max_s\": %.0f,\n"
         "  \"metrics\": {\n"
         "    \"rounds\": %d,\n    \"wins\": %d,\n    \"losses\": %d,\n    \"draws\": %d,\n"
-        "    \"win_rate\": %.3f,\n    \"avg_win_time_s\": %.2f,\n    \"self_outs\": %d,\n"
+        "    \"win_rate\": %.3f,\n    \"avg_win_time_s\": %.2f,\n    \"self_outs\": %d,\n%s"
         "    \"opponents\": [{\"name\":\"%s\",\"rounds\":%d,\"wins\":%d,"
-        "\"losses\":%d,\"draws\":%d,\"win_rate\":%.3f}]\n  }\n}\n",
-        version, total, wins, losses, draws, wr,
-        wins ? win_time_sum / wins : 0.0, self_outs,
-        rival, total, wins, losses, draws, wr);
+        "\"losses\":%d,\"draws\":%d,\"win_rate\":%.3f%s}]\n  }\n}\n",
+        version, reg ? "reglamento" : "banco", timeout, total, wins, losses, draws, wr,
+        wins ? win_time_sum / wins : 0.0, self_outs, extra_top,
+        rival, total, wins, losses, draws, wr, extra);
       fclose(f);
       printf("[arbitro] resultados -> %s\n", out_path);
     } else {

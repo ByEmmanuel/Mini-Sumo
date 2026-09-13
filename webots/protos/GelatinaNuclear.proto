@@ -1,15 +1,23 @@
 #VRML_SIM R2023b utf8
 # tags: static
-# Gelatina Nuclear -- mini-sumo reglamentario 10 x 10 cm / 500 g
+# ===========================================================================
+#  Gelatina Nuclear -- mini-sumo 10 x 10 cm / 500 g, con componentes reales.
+#  GENERADO por hardware/genera_proto.py desde hardware/modelo_robot.py.
+#  NO EDITAR A MANO: cambiar la pieza alli y regenerar. BOM en hardware/BOM.md.
 #
-# Presupuesto dimensional (ENU: x adelante, y babor, z arriba):
-#   largo  chasis -0.050 .. +0.035  +  pala hasta +0.0487   = 98.7 mm  (<= 100)
-#   ancho  ruedas -0.050 .. +0.050                          = 100  mm  (<= 100)
-#   masa   chasis 0.440 + 2 ruedas x 0.030                  = 500  g   (<= 500)
+#  Motores Pololu #3063 (50:1 HPCB) a 7.4 V: 84.0 rad/s, 0.0895 N*m.
+#  Masa 495.0 g; CdM (-14.0, +0.0, +13.4) mm,
+#  4.0 mm por detras del eje: casi toda la carga va a las ruedas.
 #
-# Apoyos: 2 ruedas motrices + patin trasero. El centro de masas va 4 mm por
-# detras del eje para que la pala quede libre y casi toda la carga caiga sobre
-# las ruedas (traccion), sin riesgo de volcar hacia atras al empujar.
+#  Distancia: 5 x VL53L0X con UN rayo, como tests/harness.c. Con varios rayos
+#  Webots promedia como 1200 los que no tocan nada y los inferiores ven el
+#  suelo del dohyo a ~0.5 m (rival fantasma a ~750 mm).
+#  Linea: 4 x QTR-1A. Webots divide la distancia (~5.7 mm) por la
+#  reflectancia antes de la tabla: blanco -> ~935, negro -> 20. La pala del
+#  rival metida debajo tambien se lee como blanco, igual que en el robot real.
+#  Las esquinas delanteras van tras la pala (x = 0.022): bajo ella no caben.
+#  Cylinder tiene su eje en z (R2022a+): ruedas y ejes se giran 90 grados.
+# ===========================================================================
 
 PROTO GelatinaNuclear [
   field SFVec3f    translation    0 0 0.001
@@ -18,8 +26,7 @@ PROTO GelatinaNuclear [
   field SFString   controller     "gelatina_nuclear"
   field MFString   controllerArgs []
   field SFColor    color          0.78 0.92 0.12
-  field SFColor    bladeColor     0.55 0.57 0.60
-  field SFFloat    bodyMass       0.440
+  field SFColor    bladeColor     0.82 0.83 0.85
 ]
 {
   Robot {
@@ -30,46 +37,61 @@ PROTO GelatinaNuclear [
     controllerArgs IS controllerArgs
     contactMaterial "patin"
     children [
+      Pose { translation -0.01 0 0.005 children [ Shape { appearance DEF AP_ALUMINIO PBRAppearance { baseColor 0.86 0.87 0.89 metalness 0.55 roughness 0.35 } geometry Box { size 0.08 0.068 0.002 } } ] }  # placa base Al 6061 2 mm
+      Pose { translation -0.01 0.033 0.0205 children [ Shape { appearance DEF AP_PLA_COLOR PBRAppearance { baseColor IS color metalness 0 roughness 0.55 } geometry Box { size 0.08 0.002 0.029 } } ] }  # pared lateral PLA
+      Pose { translation -0.01 -0.033 0.0205 children [ Shape { appearance USE AP_PLA_COLOR geometry Box { size 0.08 0.002 0.029 } } ] }  # pared lateral PLA
+      Pose { translation -0.049 0 0.0205 children [ Shape { appearance USE AP_PLA_COLOR geometry Box { size 0.002 0.064 0.029 } } ] }  # pared trasera PLA
+      Pose { translation 0.029 0 0.026 children [ Shape { appearance USE AP_PLA_COLOR geometry Box { size 0.01 0.064 0.018 } } ] }  # barra de sensores PLA
+      Pose { translation 0.0366 0 0.0093 rotation 0 1 0 0.6 children [ Shape { appearance DEF AP_INOX PBRAppearance { baseColor IS bladeColor metalness 0.60 roughness 0.22 } geometry Box { size 0.03 0.098 0.0015 } } ] }  # pala inox 1.5 mm
+      Pose { translation -0.046 0 0.004 children [ Shape { appearance DEF AP_PTFE PBRAppearance { baseColor 0.95 0.95 0.93 metalness 0 roughness 0.30 } geometry Sphere { radius 0.004 subdivision 2 } } ] }  # patin trasero PTFE
+      Pose { translation -0.01 0.0265 0.021 children [ Shape { appearance DEF AP_ACERO PBRAppearance { baseColor 0.62 0.63 0.65 metalness 0.60 roughness 0.35 } geometry Box { size 0.01 0.009 0.012 } } ] }  # reductora 51.45:1
+      Transform { translation -0.01 0.01525 0.021 rotation 1 0 0 1.5708 scale 0.83333 1 1 children [ Shape { appearance DEF AP_LATA PBRAppearance { baseColor 0.85 0.86 0.88 metalness 0.60 roughness 0.30 } geometry Cylinder { radius 0.006 height 0.0135 subdivision 24 } } ] }  # motor (lata)
+      Pose { translation -0.01 0.00725 0.021 children [ Shape { appearance DEF AP_PLA_NEGRO PBRAppearance { baseColor 0.05 0.05 0.06 metalness 0 roughness 0.60 } geometry Box { size 0.01 0.0025 0.012 } } ] }  # tapa del motor
+      Pose { translation -0.0125 0.0058 0.0255 children [ Shape { appearance DEF AP_COBRE PBRAppearance { baseColor 0.93 0.55 0.33 metalness 0.60 roughness 0.30 } geometry Box { size 0.0015 0.0008 0.003 } } ] }  # borne
+      Pose { translation -0.0075 0.0058 0.0255 children [ Shape { appearance USE AP_COBRE geometry Box { size 0.0015 0.0008 0.003 } } ] }  # borne
+      Pose { translation -0.01 0.036 0.021 rotation 1 0 0 1.5708 children [ Shape { appearance USE AP_ACERO geometry Cylinder { radius 0.0015 height 0.01 subdivision 24 } } ] }  # eje D 3 mm
+      Pose { translation -0.01 0.0265 0.021 children [ Shape { appearance USE AP_PLA_NEGRO geometry Box { size 0.014 0.0035 0.016 } } ] }  # soporte del motor
+      Pose { translation -0.0125 0.0065 0.031 children [ Shape { appearance DEF AP_ROJO PBRAppearance { baseColor 0.80 0.05 0.05 metalness 0 roughness 0.50 } geometry Cylinder { radius 0.0006 height 0.008 subdivision 24 } } ] }  # cable rojo
+      Pose { translation -0.0075 0.0065 0.031 children [ Shape { appearance USE AP_PLA_NEGRO geometry Cylinder { radius 0.0006 height 0.008 subdivision 24 } } ] }  # cable negro
+      Pose { translation -0.01 -0.0265 0.021 children [ Shape { appearance USE AP_ACERO geometry Box { size 0.01 0.009 0.012 } } ] }  # reductora 51.45:1
+      Transform { translation -0.01 -0.01525 0.021 rotation 1 0 0 1.5708 scale 0.83333 1 1 children [ Shape { appearance USE AP_LATA geometry Cylinder { radius 0.006 height 0.0135 subdivision 24 } } ] }  # motor (lata)
+      Pose { translation -0.01 -0.00725 0.021 children [ Shape { appearance USE AP_PLA_NEGRO geometry Box { size 0.01 0.0025 0.012 } } ] }  # tapa del motor
+      Pose { translation -0.0125 -0.0058 0.0255 children [ Shape { appearance USE AP_COBRE geometry Box { size 0.0015 0.0008 0.003 } } ] }  # borne
+      Pose { translation -0.0075 -0.0058 0.0255 children [ Shape { appearance USE AP_COBRE geometry Box { size 0.0015 0.0008 0.003 } } ] }  # borne
+      Pose { translation -0.01 -0.036 0.021 rotation 1 0 0 1.5708 children [ Shape { appearance USE AP_ACERO geometry Cylinder { radius 0.0015 height 0.01 subdivision 24 } } ] }  # eje D 3 mm
+      Pose { translation -0.01 -0.0265 0.021 children [ Shape { appearance USE AP_PLA_NEGRO geometry Box { size 0.014 0.0035 0.016 } } ] }  # soporte del motor
+      Pose { translation -0.0125 -0.0065 0.031 children [ Shape { appearance USE AP_ROJO geometry Cylinder { radius 0.0006 height 0.008 subdivision 24 } } ] }  # cable rojo
+      Pose { translation -0.0075 -0.0065 0.031 children [ Shape { appearance USE AP_PLA_NEGRO geometry Cylinder { radius 0.0006 height 0.008 subdivision 24 } } ] }  # cable negro
+      Pose { translation -0.04 0 0.027 children [ Shape { appearance DEF AP_LIPO PBRAppearance { baseColor 0.10 0.24 0.62 metalness 0.1 roughness 0.30 } geometry Box { size 0.016 0.046 0.014 } } ] }  # LiPo 2S 300 mAh
+      Pose { translation -0.04 0 0.027 children [ Shape { appearance DEF AP_ETIQUETA PBRAppearance { baseColor 0.80 0.80 0.82 metalness 0.6 roughness 0.35 } geometry Box { size 0.0162 0.014 0.0142 } } ] }  # etiqueta LiPo
+      Pose { translation -0.009 0 0.0353 children [ Shape { appearance DEF AP_FR4 PBRAppearance { baseColor 0.04 0.22 0.10 metalness 0 roughness 0.40 } geometry Box { size 0.078 0.068 0.0016 } } ] }  # PCB FR4 1.6 mm
+      Pose { translation -0.002 0.012 0.0364 children [ Shape { appearance DEF AP_CHIP PBRAppearance { baseColor 0.03 0.03 0.03 metalness 0 roughness 0.35 } geometry Box { size 0.007 0.007 0.0006 } } ] }  # STM32F411 (UFQFPN48)
+      Pose { translation 0.012 -0.012 0.0367 children [ Shape { appearance USE AP_CHIP geometry Box { size 0.0053 0.0078 0.0012 } } ] }  # TB6612FNG (SSOP24)
+      Pose { translation -0.012 -0.01 0.03655 children [ Shape { appearance USE AP_CHIP geometry Box { size 0.004 0.004 0.0009 } } ] }  # MPU-6050 (QFN24)
+      Pose { translation 0.016 0.016 0.0369 children [ Shape { appearance USE AP_CHIP geometry Box { size 0.0065 0.0035 0.0016 } } ] }  # AMS1117-3.3 (SOT-223)
+      Pose { translation -0.01 0.02 0.0365 children [ Shape { appearance USE AP_ACERO geometry Box { size 0.0032 0.0025 0.0008 } } ] }  # cristal 8 MHz
+      Pose { translation -0.04 -0.024 0.03785 children [ Shape { appearance USE AP_PLA_NEGRO geometry Box { size 0.0085 0.0036 0.0035 } } ] }  # interruptor
+      Pose { translation -0.04 -0.024 0.0406 children [ Shape { appearance DEF AP_BLANCO PBRAppearance { baseColor 0.93 0.93 0.90 metalness 0 roughness 0.50 } geometry Box { size 0.0015 0.0015 0.0025 } } ] }  # palanca
+      Pose { translation -0.036 0.022 0.0386 children [ Shape { appearance DEF AP_AMARILLO PBRAppearance { baseColor 0.95 0.72 0.05 metalness 0 roughness 0.45 } geometry Box { size 0.01 0.005 0.005 } } ] }  # conector XT30
+      Pose { translation 0.024 -0.024 0.0376 children [ Shape { appearance USE AP_BLANCO geometry Box { size 0.003 0.0045 0.003 } } ] }  # JST-SH ToF
+      Pose { translation 0.024 -0.012 0.0376 children [ Shape { appearance USE AP_BLANCO geometry Box { size 0.003 0.0045 0.003 } } ] }  # JST-SH ToF
+      Pose { translation 0.024 0 0.0376 children [ Shape { appearance USE AP_BLANCO geometry Box { size 0.003 0.0045 0.003 } } ] }  # JST-SH ToF
+      Pose { translation 0.024 0.012 0.0376 children [ Shape { appearance USE AP_BLANCO geometry Box { size 0.003 0.0045 0.003 } } ] }  # JST-SH ToF
+      Pose { translation 0.024 0.024 0.0376 children [ Shape { appearance USE AP_BLANCO geometry Box { size 0.003 0.0045 0.003 } } ] }  # JST-SH ToF
+      Pose { translation -0.045 -0.03 0.0367 children [ Shape { appearance DEF AP_ACERO_NEG PBRAppearance { baseColor 0.08 0.08 0.09 metalness 0.5 roughness 0.40 } geometry Cylinder { radius 0.0019 height 0.0012 subdivision 24 } } ] }  # tornillo M2
+      Pose { translation -0.045 0.03 0.0367 children [ Shape { appearance USE AP_ACERO_NEG geometry Cylinder { radius 0.0019 height 0.0012 subdivision 24 } } ] }  # tornillo M2
+      Pose { translation 0.027 -0.03 0.0367 children [ Shape { appearance USE AP_ACERO_NEG geometry Cylinder { radius 0.0019 height 0.0012 subdivision 24 } } ] }  # tornillo M2
+      Pose { translation 0.027 0.03 0.0367 children [ Shape { appearance USE AP_ACERO_NEG geometry Cylinder { radius 0.0019 height 0.0012 subdivision 24 } } ] }  # tornillo M2
+      Pose { translation 0.022 0.039 0.0101 children [ Shape { appearance USE AP_PLA_NEGRO geometry Box { size 0.008 0.01 0.0016 } } ] }  # soporte QTR delantero
+      Pose { translation -0.042 0.039 0.0101 children [ Shape { appearance USE AP_PLA_NEGRO geometry Box { size 0.008 0.01 0.0016 } } ] }  # soporte QTR trasero
+      Pose { translation 0.022 -0.039 0.0101 children [ Shape { appearance USE AP_PLA_NEGRO geometry Box { size 0.008 0.01 0.0016 } } ] }  # soporte QTR delantero
+      Pose { translation -0.042 -0.039 0.0101 children [ Shape { appearance USE AP_PLA_NEGRO geometry Box { size 0.008 0.01 0.0016 } } ] }  # soporte QTR trasero
+      Pose { translation -0.02067 0 0.01 children [ Shape { appearance DEF AP_TUNGSTENO PBRAppearance { baseColor 0.42 0.43 0.45 metalness 0.50 roughness 0.50 } geometry Box { size 0.03548 0.06 0.008 } } ] }  # lastre de tungsteno
 
-      # ---------------- chasis ----------------
-      Pose {
-        translation -0.0075 0 0.021
-        children [
-          Shape {
-            appearance PBRAppearance { baseColor IS color roughness 0.45 metalness 0.1 }
-            geometry Box { size 0.085 0.070 0.028 }
-          }
-        ]
-      }
-
-      # ---------------- pala frontal (rampa) ----------------
-      Pose {
-        translation 0.038 0 0.0125
-        rotation 0 1 0 0.60
-        children [
-          Shape {
-            appearance PBRAppearance { baseColor IS bladeColor roughness 0.25 metalness 0.85 }
-            geometry Box { size 0.026 0.098 0.005 }
-          }
-        ]
-      }
-
-      # ---------------- patin trasero ----------------
-      Pose {
-        translation -0.046 0 0.004
-        children [
-          Shape {
-            appearance PBRAppearance { baseColor 0.15 0.15 0.15 roughness 0.2 metalness 0 }
-            geometry Sphere { radius 0.004 subdivision 2 }
-          }
-        ]
-      }
-
-      # ---------------- rueda izquierda ----------------
       HingeJoint {
         jointParameters HingeJointParameters { axis 0 1 0 anchor -0.010 0.0425 0.021 }
         device [
-          RotationalMotor { name "motor_izq" maxVelocity 80 maxTorque 0.13 }
+          RotationalMotor { name "motor_izq" maxVelocity 84.0 maxTorque 0.0895 }
           PositionSensor  { name "enc_izq" }
         ]
         endPoint Solid {
@@ -77,21 +99,21 @@ PROTO GelatinaNuclear [
           name "rueda_izq"
           contactMaterial "rueda"
           children [
-            Shape {
-              appearance PBRAppearance { baseColor 0.07 0.07 0.08 roughness 0.95 metalness 0 }
-              geometry Cylinder { radius 0.021 height 0.015 subdivision 24 }
-            }
+            Pose { translation 0 0 0 rotation 1 0 0 1.5708 children [ Shape { appearance DEF AP_SILICONA PBRAppearance { baseColor 0.035 0.035 0.04 metalness 0 roughness 0.92 } geometry Cylinder { radius 0.021 height 0.015 subdivision 32 } } ] }
+            Pose { translation 0 0 0 rotation 1 0 0 1.5708 children [ Shape { appearance DEF AP_PLA_GRIS PBRAppearance { baseColor 0.82 0.82 0.80 metalness 0 roughness 0.50 } geometry Cylinder { radius 0.0165 height 0.0154 subdivision 32 } } ] }
+            Pose { translation 0 0 0 rotation 1 0 0 1.5708 children [ Shape { appearance USE AP_ACERO_NEG geometry Cylinder { radius 0.0035 height 0.0158 subdivision 16 } } ] }
+            Pose { translation 0.00908 0.0078 0.00281 rotation 1 0 0 1.5708 children [ Shape { appearance USE AP_PLA_NEGRO geometry Cylinder { radius 0.003 height 0.0004 subdivision 12 } } ] }
+            Pose { translation -0.00697 0.0078 0.00646 rotation 1 0 0 1.5708 children [ Shape { appearance USE AP_PLA_NEGRO geometry Cylinder { radius 0.003 height 0.0004 subdivision 12 } } ] }
+            Pose { translation -0.00211 0.0078 -0.00926 rotation 1 0 0 1.5708 children [ Shape { appearance USE AP_PLA_NEGRO geometry Cylinder { radius 0.003 height 0.0004 subdivision 12 } } ] }
           ]
-          boundingObject Cylinder { radius 0.021 height 0.015 subdivision 24 }
-          physics Physics { density -1 mass 0.030 }
+          boundingObject Pose { rotation 1 0 0 1.5708 children [ Cylinder { radius 0.021 height 0.015 subdivision 24 } ] }
+          physics Physics { density -1 mass 0.014 centerOfMass [ 0 0 0 ] inertiaMatrix [ 2.318e-06 4.111e-06 2.318e-06, 0 0 0 ] }
         }
       }
-
-      # ---------------- rueda derecha ----------------
       HingeJoint {
         jointParameters HingeJointParameters { axis 0 1 0 anchor -0.010 -0.0425 0.021 }
         device [
-          RotationalMotor { name "motor_der" maxVelocity 80 maxTorque 0.13 }
+          RotationalMotor { name "motor_der" maxVelocity 84.0 maxTorque 0.0895 }
           PositionSensor  { name "enc_der" }
         ]
         endPoint Solid {
@@ -99,125 +121,154 @@ PROTO GelatinaNuclear [
           name "rueda_der"
           contactMaterial "rueda"
           children [
-            Shape {
-              appearance PBRAppearance { baseColor 0.07 0.07 0.08 roughness 0.95 metalness 0 }
-              geometry Cylinder { radius 0.021 height 0.015 subdivision 24 }
-            }
+            Pose { translation 0 0 0 rotation 1 0 0 1.5708 children [ Shape { appearance USE AP_SILICONA geometry Cylinder { radius 0.021 height 0.015 subdivision 32 } } ] }
+            Pose { translation 0 0 0 rotation 1 0 0 1.5708 children [ Shape { appearance USE AP_PLA_GRIS geometry Cylinder { radius 0.0165 height 0.0154 subdivision 32 } } ] }
+            Pose { translation 0 0 0 rotation 1 0 0 1.5708 children [ Shape { appearance USE AP_ACERO_NEG geometry Cylinder { radius 0.0035 height 0.0158 subdivision 16 } } ] }
+            Pose { translation 0.00908 -0.0078 0.00281 rotation 1 0 0 1.5708 children [ Shape { appearance USE AP_PLA_NEGRO geometry Cylinder { radius 0.003 height 0.0004 subdivision 12 } } ] }
+            Pose { translation -0.00697 -0.0078 0.00646 rotation 1 0 0 1.5708 children [ Shape { appearance USE AP_PLA_NEGRO geometry Cylinder { radius 0.003 height 0.0004 subdivision 12 } } ] }
+            Pose { translation -0.00211 -0.0078 -0.00926 rotation 1 0 0 1.5708 children [ Shape { appearance USE AP_PLA_NEGRO geometry Cylinder { radius 0.003 height 0.0004 subdivision 12 } } ] }
           ]
-          boundingObject Cylinder { radius 0.021 height 0.015 subdivision 24 }
-          physics Physics { density -1 mass 0.030 }
+          boundingObject Pose { rotation 1 0 0 1.5708 children [ Cylinder { radius 0.021 height 0.015 subdivision 24 } ] }
+          physics Physics { density -1 mass 0.014 centerOfMass [ 0 0 0 ] inertiaMatrix [ 2.318e-06 4.111e-06 2.318e-06, 0 0 0 ] }
         }
       }
 
-      # ================ sensores de distancia ================
-      # Orden y nombres fijados por enum sumo_dist_idx en algorithms/sumo_types.h
       DistanceSensor {
-        translation 0.030 0.036 0.026
+        translation 0.03 0.036 0.026
         rotation 0 0 1 1.0472
         name "d_l60"
-        type "generic" numberOfRays 3 aperture 0.20
+        type "generic" numberOfRays 1
         lookupTable [ 0 0 0.004, 1.2 1200 0.02 ]
-        children [ Shape { appearance PBRAppearance { baseColor 0.1 0.1 0.12 roughness 0.4 metalness 0 } geometry Box { size 0.007 0.008 0.008 } } ]
+        children [
+            Pose { translation -0.0035 0 0 children [ Shape { appearance USE AP_PLA_COLOR geometry Box { size 0.008 0.016 0.020 } } ] }
+            Pose { translation 0.0011 0 0 children [ Shape { appearance DEF AP_EPOXI PBRAppearance { baseColor 0.04 0.04 0.06 metalness 0 roughness 0.15 } geometry Box { size 0.0012 0.0070 0.0045 } } ] }
+        ]
       }
       DistanceSensor {
-        translation 0.037 0.020 0.026
+        translation 0.037 0.02 0.026
         rotation 0 0 1 0.5236
         name "d_l30"
-        type "generic" numberOfRays 3 aperture 0.20
+        type "generic" numberOfRays 1
         lookupTable [ 0 0 0.004, 1.2 1200 0.02 ]
-        children [ Shape { appearance PBRAppearance { baseColor 0.1 0.1 0.12 roughness 0.4 metalness 0 } geometry Box { size 0.007 0.008 0.008 } } ]
+        children [
+            Pose { translation -0.0035 0 0 children [ Shape { appearance USE AP_PLA_COLOR geometry Box { size 0.008 0.016 0.020 } } ] }
+            Pose { translation 0.0011 0 0 children [ Shape { appearance USE AP_EPOXI geometry Box { size 0.0012 0.0070 0.0045 } } ] }
+        ]
       }
       DistanceSensor {
         translation 0.037 0 0.026
         rotation 0 0 1 0
         name "d_c"
-        type "generic" numberOfRays 3 aperture 0.20
+        type "generic" numberOfRays 1
         lookupTable [ 0 0 0.004, 1.2 1200 0.02 ]
-        children [ Shape { appearance PBRAppearance { baseColor 0.1 0.1 0.12 roughness 0.4 metalness 0 } geometry Box { size 0.007 0.008 0.008 } } ]
+        children [
+            Pose { translation -0.0035 0 0 children [ Shape { appearance USE AP_PLA_COLOR geometry Box { size 0.008 0.016 0.020 } } ] }
+            Pose { translation 0.0011 0 0 children [ Shape { appearance USE AP_EPOXI geometry Box { size 0.0012 0.0070 0.0045 } } ] }
+        ]
       }
       DistanceSensor {
-        translation 0.037 -0.020 0.026
+        translation 0.037 -0.02 0.026
         rotation 0 0 1 -0.5236
         name "d_r30"
-        type "generic" numberOfRays 3 aperture 0.20
+        type "generic" numberOfRays 1
         lookupTable [ 0 0 0.004, 1.2 1200 0.02 ]
-        children [ Shape { appearance PBRAppearance { baseColor 0.1 0.1 0.12 roughness 0.4 metalness 0 } geometry Box { size 0.007 0.008 0.008 } } ]
+        children [
+            Pose { translation -0.0035 0 0 children [ Shape { appearance USE AP_PLA_COLOR geometry Box { size 0.008 0.016 0.020 } } ] }
+            Pose { translation 0.0011 0 0 children [ Shape { appearance USE AP_EPOXI geometry Box { size 0.0012 0.0070 0.0045 } } ] }
+        ]
       }
       DistanceSensor {
-        translation 0.030 -0.036 0.026
+        translation 0.03 -0.036 0.026
         rotation 0 0 1 -1.0472
         name "d_r60"
-        type "generic" numberOfRays 3 aperture 0.20
+        type "generic" numberOfRays 1
         lookupTable [ 0 0 0.004, 1.2 1200 0.02 ]
-        children [ Shape { appearance PBRAppearance { baseColor 0.1 0.1 0.12 roughness 0.4 metalness 0 } geometry Box { size 0.007 0.008 0.008 } } ]
+        children [
+            Pose { translation -0.0035 0 0 children [ Shape { appearance USE AP_PLA_COLOR geometry Box { size 0.008 0.016 0.020 } } ] }
+            Pose { translation 0.0011 0 0 children [ Shape { appearance USE AP_EPOXI geometry Box { size 0.0012 0.0070 0.0045 } } ] }
+        ]
       }
 
-      # ================ sensores de linea (IR al suelo) ================
-      # rotation 0 1 0 1.5708 orienta el eje +x del sensor hacia -z (abajo).
       DistanceSensor {
-        translation 0.040 0.040 0.006
+        translation 0.022 0.04 0.006
         rotation 0 1 0 1.5708
         name "l_fl"
         type "infra-red" numberOfRays 1 aperture 0.12
-        lookupTable [ 0 1000 0.0, 0.012 900 0.01, 0.030 250 0.03 ]
+        lookupTable [ 0 1000 0.0, 0.012 900 0.01, 0.016 20 0.03 ]
+        children [
+            Pose { translation -0.0027 0 0 children [ Shape { appearance DEF AP_PCB_AZUL PBRAppearance { baseColor 0.04 0.18 0.52 metalness 0 roughness 0.40 } geometry Box { size 0.0016 0.0076 0.0127 } } ] }
+            Pose { translation -0.00105 0 0 children [ Shape { appearance USE AP_CHIP geometry Box { size 0.0017 0.0029 0.0036 } } ] }
+        ]
       }
       DistanceSensor {
-        translation 0.040 -0.040 0.006
+        translation 0.022 -0.04 0.006
         rotation 0 1 0 1.5708
         name "l_fr"
         type "infra-red" numberOfRays 1 aperture 0.12
-        lookupTable [ 0 1000 0.0, 0.012 900 0.01, 0.030 250 0.03 ]
+        lookupTable [ 0 1000 0.0, 0.012 900 0.01, 0.016 20 0.03 ]
+        children [
+            Pose { translation -0.0027 0 0 children [ Shape { appearance USE AP_PCB_AZUL geometry Box { size 0.0016 0.0076 0.0127 } } ] }
+            Pose { translation -0.00105 0 0 children [ Shape { appearance USE AP_CHIP geometry Box { size 0.0017 0.0029 0.0036 } } ] }
+        ]
       }
       DistanceSensor {
-        translation -0.042 0.040 0.006
+        translation -0.042 0.04 0.006
         rotation 0 1 0 1.5708
         name "l_rl"
         type "infra-red" numberOfRays 1 aperture 0.12
-        lookupTable [ 0 1000 0.0, 0.012 900 0.01, 0.030 250 0.03 ]
+        lookupTable [ 0 1000 0.0, 0.012 900 0.01, 0.016 20 0.03 ]
+        children [
+            Pose { translation -0.0027 0 0 children [ Shape { appearance USE AP_PCB_AZUL geometry Box { size 0.0016 0.0076 0.0127 } } ] }
+            Pose { translation -0.00105 0 0 children [ Shape { appearance USE AP_CHIP geometry Box { size 0.0017 0.0029 0.0036 } } ] }
+        ]
       }
       DistanceSensor {
-        translation -0.042 -0.040 0.006
+        translation -0.042 -0.04 0.006
         rotation 0 1 0 1.5708
         name "l_rr"
         type "infra-red" numberOfRays 1 aperture 0.12
-        lookupTable [ 0 1000 0.0, 0.012 900 0.01, 0.030 250 0.03 ]
+        lookupTable [ 0 1000 0.0, 0.012 900 0.01, 0.016 20 0.03 ]
+        children [
+            Pose { translation -0.0027 0 0 children [ Shape { appearance USE AP_PCB_AZUL geometry Box { size 0.0016 0.0076 0.0127 } } ] }
+            Pose { translation -0.00105 0 0 children [ Shape { appearance USE AP_CHIP geometry Box { size 0.0017 0.0029 0.0036 } } ] }
+        ]
       }
 
-      # ================ inercial ================
-      InertialUnit { translation 0 0 0.020 name "imu" }
-      Gyro         { translation 0 0 0.020 name "giro" }
+      InertialUnit { translation -0.012 -0.010 0.037 name "imu" }
+      Gyro         { translation -0.012 -0.010 0.037 name "giro" }
 
-      # ================ enlace con el arbitro ================
-      Receiver { name "receptor" channel 1 }
+      Receiver {
+        translation -0.044 0.010 0.0361
+        name "receptor" channel 1
+        children [
+            Pose { translation 0 0 0.0065 children [ Shape { appearance USE AP_PLA_NEGRO geometry Box { size 0.0012 0.013 0.011 } } ] }
+            Pose { translation -0.0026 0 0.0085 children [ Shape { appearance USE AP_EPOXI geometry Box { size 0.004 0.006 0.005 } } ] }
+            Pose { translation -0.0047 0 0.0085 children [ Shape { appearance USE AP_EPOXI geometry Sphere { radius 0.0022 subdivision 2 } } ] }
+        ]
+      }
 
-      # ================ testigo de estado ================
       LED {
+        translation -0.030 0 0.0361
         name "led"
         children [
-          Pose {
-            translation -0.030 0 0.038
-            children [
-              Shape {
-                appearance PBRAppearance { baseColor 1 1 1 emissiveColor 0 0 0 roughness 0.2 metalness 0 }
-                geometry Sphere { radius 0.005 subdivision 2 }
-              }
-            ]
-          }
+          Pose { translation 0 0 0.0015 children [ Shape { appearance PBRAppearance { baseColor 1 1 1 emissiveColor 0 0 0 roughness 0.2 metalness 0 } geometry Sphere { radius 0.0015 subdivision 2 } } ] }
         ]
       }
     ]
 
     boundingObject Group {
       children [
-        Pose { translation -0.0075 0 0.021 children [ Box { size 0.085 0.070 0.028 } ] }
-        Pose { translation 0.038 0 0.0125 rotation 0 1 0 0.60 children [ Box { size 0.026 0.098 0.005 } ] }
+        Pose { translation -0.010 0 0.02045 children [ Box { size 0.080 0.068 0.0329 } ] }
+        Pose { translation 0.033 0 0.0269 children [ Box { size 0.006 0.068 0.0200 } ] }
+        Pose { translation 0.0347 0 0.00969 rotation 0 1 0 0.6 children [ Box { size 0.02641 0.098 0.003 } ] }
         Pose { translation -0.046 0 0.004 children [ Sphere { radius 0.004 subdivision 2 } ] }
       ]
     }
     physics Physics {
       density -1
-      mass IS bodyMass
-      centerOfMass [ -0.014 0 0.015 ]
+      mass 0.467
+      centerOfMass [ -0.01424 0.00002 0.01297 ]
+      inertiaMatrix [ 1.9974e-04 2.4251e-04 3.8067e-04, 2.9760e-07 6.5343e-07 -2.9027e-07 ]
     }
   }
 }
