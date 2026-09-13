@@ -1,0 +1,535 @@
+{
+  "esquema": 1,
+  "listas": [
+    {
+      "id": "13-09-26 V1",
+      "fichero": "tareas.txt",
+      "importada": "2026-09-13T08:01:49-06:00"
+    }
+  ],
+  "tareas": [
+    {
+      "id": "T-001",
+      "texto": "Leer el reglamento",
+      "huella": "f36ed3504d79f05f",
+      "origen": {
+        "fichero": "tareas.txt",
+        "linea": 3,
+        "lista": "13-09-26 V1"
+      },
+      "estado": "hecha",
+      "prioridad": "alta",
+      "responsable": "claude",
+      "etiquetas": [
+        "reglamento"
+      ],
+      "criterio": "Resumen del reglamento con cada regla enlazada a su efecto en el proyecto: cumple, ajustado o pendiente.",
+      "depende_de": [],
+      "padre": null,
+      "creada": "2026-09-13T08:01:49-06:00",
+      "actualizada": "2026-09-13T08:42:50-06:00",
+      "evidencia": [
+        {
+          "fecha": "2026-09-13T08:42:50-06:00",
+          "texto": "Reglamento leído entero (24 págs.); cada regla enlazada a su estado en el proyecto",
+          "rutas": [
+            "Mini-Sumo/REGLAMENTO.md"
+          ]
+        }
+      ],
+      "notas": [],
+      "historial": [
+        {
+          "fecha": "2026-09-13T08:01:50-06:00",
+          "de": "pendiente",
+          "a": "en_curso",
+          "motivo": ""
+        },
+        {
+          "fecha": "2026-09-13T08:42:50-06:00",
+          "de": "en_curso",
+          "a": "hecha",
+          "motivo": "Reglamento leído entero (24 págs.); cada regla enlazada a su estado en el proyecto"
+        }
+      ]
+    },
+    {
+      "id": "T-002",
+      "texto": "Ajustar el proyecto que llevamos hasta ahora dependiendo de lo que dice el reglamento",
+      "huella": "b33fd73030220a81",
+      "origen": {
+        "fichero": "tareas.txt",
+        "linea": 5,
+        "lista": "13-09-26 V1"
+      },
+      "estado": "hecha",
+      "prioridad": "alta",
+      "responsable": "claude",
+      "etiquetas": [
+        "reglamento"
+      ],
+      "criterio": "Colocaciones del reglamento (frente, lado y espalda a 5 cm) y combate a 3 rondas en el banco nativo, el simulador de GPU y el árbitro de Webots; versiones anteriores medidas otra vez en ese modo.",
+      "depende_de": [
+        "T-001"
+      ],
+      "padre": null,
+      "creada": "2026-09-13T08:01:49-06:00",
+      "actualizada": "2026-09-13T08:58:44-06:00",
+      "evidencia": [
+        {
+          "fecha": "2026-09-13T08:58:44-06:00",
+          "texto": "Modo reglamento en banco en C, GPU y árbitro; 495 g y pulsador de arranque. Webots con reglamento: v0.3.0 combate 25,9 % con 63 auto-salidas; v0.3.1 100 % sin auto-salidas",
+          "rutas": [
+            "Mini-Sumo/REGLAMENTO.md",
+            "Mini-Sumo/runs/webots_v0.3.0_reglamento.json",
+            "Mini-Sumo/runs/webots_c-001_reglamento.json"
+          ]
+        }
+      ],
+      "notas": [
+        {
+          "fecha": "2026-09-13T08:42:50-06:00",
+          "texto": "Hecho: modo --reglamento en harness.c (modo de siempre idéntico), GPU y árbitro; 495 g y pulsador de arranque en hardware/. Falta: tanda de Webots con el reglamento."
+        }
+      ],
+      "historial": [
+        {
+          "fecha": "2026-09-13T08:42:50-06:00",
+          "de": "pendiente",
+          "a": "en_curso",
+          "motivo": ""
+        },
+        {
+          "fecha": "2026-09-13T08:58:44-06:00",
+          "de": "en_curso",
+          "a": "hecha",
+          "motivo": "Modo reglamento en banco en C, GPU y árbitro; 495 g y pulsador de arranque. Webots con reglamento: v0.3.0 combate 25,9 %"
+        }
+      ]
+    },
+    {
+      "id": "T-003",
+      "texto": "Realizar un modelo de aprendizaje supervizado por refuerzo de cada algoritmo",
+      "huella": "8e779f7d693dcd04",
+      "origen": {
+        "fichero": "tareas.txt",
+        "linea": 7,
+        "lista": "13-09-26 V1"
+      },
+      "estado": "hecha",
+      "prioridad": "alta",
+      "responsable": "claude",
+      "etiquetas": [
+        "ml"
+      ],
+      "criterio": "Entrenamiento en GPU de cada algoritmo de movimiento (máquina de estados parametrizada y política neuronal), guiado por un modelo de recompensa aprendido de las preferencias del usuario.",
+      "depende_de": [],
+      "padre": null,
+      "creada": "2026-09-13T08:01:49-06:00",
+      "actualizada": "2026-09-13T09:00:44-06:00",
+      "evidencia": [
+        {
+          "fecha": "2026-09-13T09:00:44-06:00",
+          "texto": "Dos algoritmos de movimiento entrenados en GPU con modelo de recompensa humana: máquina de estados por CMA-ES (resultado v0.3.1) y política neuronal por PPO. Ciclo completo en python -m ml ciclo",
+          "rutas": [
+            "Mini-Sumo/ml/README.md"
+          ]
+        }
+      ],
+      "notas": [],
+      "historial": [
+        {
+          "fecha": "2026-09-13T08:42:50-06:00",
+          "de": "pendiente",
+          "a": "en_curso",
+          "motivo": ""
+        },
+        {
+          "fecha": "2026-09-13T09:00:44-06:00",
+          "de": "en_curso",
+          "a": "hecha",
+          "motivo": "Dos algoritmos de movimiento entrenados en GPU con modelo de recompensa humana: máquina de estados por CMA-ES (resultado"
+        }
+      ]
+    },
+    {
+      "id": "T-004",
+      "texto": "Ir al directorio de Gelatina_Nuclear/codex y utilizar unicamente la pagina web para mostrar los cambios de los algoritmos",
+      "huella": "820408b6f847d929",
+      "origen": {
+        "fichero": "tareas.txt",
+        "linea": 9,
+        "lista": "13-09-26 V1"
+      },
+      "estado": "hecha",
+      "prioridad": "media",
+      "responsable": "claude",
+      "etiquetas": [
+        "web"
+      ],
+      "criterio": "Los cambios de los algoritmos se ven en una interfaz con el diseño de la web de codex/, sin modificar codex/: se copia el diseño en solo lectura.",
+      "depende_de": [],
+      "padre": null,
+      "creada": "2026-09-13T08:01:49-06:00",
+      "actualizada": "2026-09-13T08:58:44-06:00",
+      "evidencia": [
+        {
+          "fecha": "2026-09-13T08:58:44-06:00",
+          "texto": "La interfaz de ml/ usa el diseño de la web de codex/ (ml/web/codex.css es copia exacta de codex/web/style.css, mismo sha256); muestra versiones, diffs, entrenamientos, liga, dirección y tareas. codex/ no se modificó",
+          "rutas": [
+            "Mini-Sumo/ml/web/codex.css"
+          ]
+        }
+      ],
+      "notas": [],
+      "historial": [
+        {
+          "fecha": "2026-09-13T08:58:44-06:00",
+          "de": "pendiente",
+          "a": "hecha",
+          "motivo": "La interfaz de ml/ usa el diseño de la web de codex/ (ml/web/codex.css es copia exacta de codex/web/style.css, mismo sha"
+        }
+      ]
+    },
+    {
+      "id": "T-005",
+      "texto": "realizar demasiadas simulaciones de los algoritmos que corran en la GPU",
+      "huella": "2ece54721edec2fb",
+      "origen": {
+        "fichero": "tareas.txt",
+        "linea": 11,
+        "lista": "13-09-26 V1"
+      },
+      "estado": "hecha",
+      "prioridad": "alta",
+      "responsable": "claude",
+      "etiquetas": [
+        "gpu"
+      ],
+      "criterio": "Simulador vectorizado en la RTX 5070 validado contra tests/harness.c, con más de 100.000 asaltos por minuto.",
+      "depende_de": [],
+      "padre": null,
+      "creada": "2026-09-13T08:01:49-06:00",
+      "actualizada": "2026-09-13T08:42:50-06:00",
+      "evidencia": [
+        {
+          "fecha": "2026-09-13T08:42:50-06:00",
+          "texto": "Corrida reglamento-1: 7,4 M asaltos en 184 s en la RTX 5070 (100 gen x 512 candidatos x 144 asaltos)",
+          "rutas": [
+            "Mini-Sumo/ml/data/corridas"
+          ]
+        }
+      ],
+      "notas": [],
+      "historial": [
+        {
+          "fecha": "2026-09-13T08:42:50-06:00",
+          "de": "pendiente",
+          "a": "hecha",
+          "motivo": "Corrida reglamento-1: 7,4 M asaltos en 184 s en la RTX 5070 (100 gen x 512 candidatos x 144 asaltos)"
+        }
+      ]
+    },
+    {
+      "id": "T-006",
+      "texto": "Ir dando retroalimentacion al modelo",
+      "huella": "f5fb8ea3ebc556ce",
+      "origen": {
+        "fichero": "tareas.txt",
+        "linea": 13,
+        "lista": "13-09-26 V1"
+      },
+      "estado": "pendiente",
+      "prioridad": "alta",
+      "responsable": "usuario",
+      "etiquetas": [
+        "ml"
+      ],
+      "criterio": "El usuario vota comparaciones A/B en la interfaz local; el modelo de recompensa se reentrena con esos votos y guía la siguiente tanda de entrenamiento.",
+      "depende_de": [
+        "T-003"
+      ],
+      "padre": null,
+      "creada": "2026-09-13T08:01:49-06:00",
+      "actualizada": "2026-09-13T08:58:44-06:00",
+      "evidencia": [],
+      "notas": [
+        {
+          "fecha": "2026-09-13T08:58:44-06:00",
+          "texto": "Hay 12 comparaciones reales esperando voto: v0.3.1 (c-001) contra v0.3.0. Arranca la interfaz con: cd Mini-Sumo && ml/.venv/bin/python -m ml servidor"
+        }
+      ],
+      "historial": []
+    },
+    {
+      "id": "T-007",
+      "texto": "Simulador del dohyo vectorizado en PyTorch, equivalente a tests/harness.c y con las colocaciones del reglamento",
+      "huella": "8b468af1a13e99d9",
+      "origen": {
+        "fichero": null,
+        "linea": null,
+        "lista": "claude"
+      },
+      "estado": "hecha",
+      "prioridad": "alta",
+      "responsable": "claude",
+      "etiquetas": [],
+      "criterio": "",
+      "depende_de": [],
+      "padre": "T-005",
+      "creada": "2026-09-13T08:01:49-06:00",
+      "actualizada": "2026-09-13T08:42:50-06:00",
+      "evidencia": [
+        {
+          "fecha": "2026-09-13T08:42:50-06:00",
+          "texto": "Simulador vectorizado en PyTorch; 96 comparaciones contra tests/harness.c con |z| <= 2,1 en 4 versiones y 2 modos; 90.700 asaltos/s con 262.144 entornos",
+          "rutas": [
+            "Mini-Sumo/ml/sim.py",
+            "Mini-Sumo/ml/data/validacion.json"
+          ]
+        }
+      ],
+      "notas": [],
+      "historial": [
+        {
+          "fecha": "2026-09-13T08:42:50-06:00",
+          "de": "pendiente",
+          "a": "hecha",
+          "motivo": "Simulador vectorizado en PyTorch; 96 comparaciones contra tests/harness.c con |z| <= 2,1 en 4 versiones y 2 modos; 90.70"
+        }
+      ]
+    },
+    {
+      "id": "T-008",
+      "texto": "Port vectorizado de strategy.c para evaluar miles de juegos de parámetros a la vez",
+      "huella": "087f09674a63e9f0",
+      "origen": {
+        "fichero": null,
+        "linea": null,
+        "lista": "claude"
+      },
+      "estado": "hecha",
+      "prioridad": "alta",
+      "responsable": "claude",
+      "etiquetas": [],
+      "criterio": "",
+      "depende_de": [],
+      "padre": "T-003",
+      "creada": "2026-09-13T08:01:49-06:00",
+      "actualizada": "2026-09-13T08:42:50-06:00",
+      "evidencia": [
+        {
+          "fecha": "2026-09-13T08:42:50-06:00",
+          "texto": "fsm.py reproduce strategy.c línea a línea; validado con v0.1.0 a v0.3.0",
+          "rutas": [
+            "Mini-Sumo/ml/fsm.py"
+          ]
+        }
+      ],
+      "notas": [],
+      "historial": [
+        {
+          "fecha": "2026-09-13T08:42:50-06:00",
+          "de": "pendiente",
+          "a": "hecha",
+          "motivo": "fsm.py reproduce strategy.c línea a línea; validado con v0.1.0 a v0.3.0"
+        }
+      ]
+    },
+    {
+      "id": "T-009",
+      "texto": "Estrategia evolutiva (CMA-ES) sobre los parámetros de la máquina de estados",
+      "huella": "1dd1118ac25be6a1",
+      "origen": {
+        "fichero": null,
+        "linea": null,
+        "lista": "claude"
+      },
+      "estado": "hecha",
+      "prioridad": "alta",
+      "responsable": "claude",
+      "etiquetas": [],
+      "criterio": "",
+      "depende_de": [],
+      "padre": "T-003",
+      "creada": "2026-09-13T08:01:49-06:00",
+      "actualizada": "2026-09-13T08:42:50-06:00",
+      "evidencia": [
+        {
+          "fecha": "2026-09-13T08:42:50-06:00",
+          "texto": "CMA-ES en es.py; primera corrida: campeón c-001, derrotas en el banco en C de 38 a 2 (modo banco) y de 66 a 5 (modo reglamento)",
+          "rutas": [
+            "Mini-Sumo/ml/es.py",
+            "Mini-Sumo/ml/data/banco_c_c-001.json"
+          ]
+        }
+      ],
+      "notas": [],
+      "historial": [
+        {
+          "fecha": "2026-09-13T08:42:50-06:00",
+          "de": "pendiente",
+          "a": "hecha",
+          "motivo": "CMA-ES en es.py; primera corrida: campeón c-001, derrotas en el banco en C de 38 a 2 (modo banco) y de 66 a 5 (modo regl"
+        }
+      ]
+    },
+    {
+      "id": "T-010",
+      "texto": "Modelo de recompensa por preferencias humanas (Bradley-Terry con un conjunto de redes)",
+      "huella": "79d6c30444f55ef9",
+      "origen": {
+        "fichero": null,
+        "linea": null,
+        "lista": "claude"
+      },
+      "estado": "hecha",
+      "prioridad": "alta",
+      "responsable": "claude",
+      "etiquetas": [],
+      "criterio": "",
+      "depende_de": [],
+      "padre": "T-003",
+      "creada": "2026-09-13T08:01:49-06:00",
+      "actualizada": "2026-09-13T08:42:50-06:00",
+      "evidencia": [
+        {
+          "fecha": "2026-09-13T08:42:50-06:00",
+          "texto": "recompensa.py: Bradley-Terry, 5 redes con bootstrap, cabeza lineal, validación cruzada; ciclo probado con votos sintéticos en datos aparte (no del usuario)",
+          "rutas": [
+            "Mini-Sumo/ml/recompensa.py"
+          ]
+        }
+      ],
+      "notas": [],
+      "historial": [
+        {
+          "fecha": "2026-09-13T08:42:50-06:00",
+          "de": "pendiente",
+          "a": "hecha",
+          "motivo": "recompensa.py: Bradley-Terry, 5 redes con bootstrap, cabeza lineal, validación cruzada; ciclo probado con votos sintétic"
+        }
+      ]
+    },
+    {
+      "id": "T-011",
+      "texto": "Liga de versiones y dirección de mejora: hacia qué parámetros se inclinan las mejores versiones",
+      "huella": "ae5df08d9261cf0c",
+      "origen": {
+        "fichero": null,
+        "linea": null,
+        "lista": "claude"
+      },
+      "estado": "hecha",
+      "prioridad": "alta",
+      "responsable": "claude",
+      "etiquetas": [],
+      "criterio": "",
+      "depende_de": [],
+      "padre": "T-003",
+      "creada": "2026-09-13T08:01:49-06:00",
+      "actualizada": "2026-09-13T08:42:50-06:00",
+      "evidencia": [
+        {
+          "fecha": "2026-09-13T08:42:50-06:00",
+          "texto": "liga.py: Elo por Bradley-Terry todos contra todos y sustituto neuronal (R2 0,77 en 51.200 muestras) cuyo gradiente da la dirección",
+          "rutas": [
+            "Mini-Sumo/ml/liga.py",
+            "Mini-Sumo/ml/data/liga.json"
+          ]
+        }
+      ],
+      "notas": [],
+      "historial": [
+        {
+          "fecha": "2026-09-13T08:42:50-06:00",
+          "de": "pendiente",
+          "a": "hecha",
+          "motivo": "liga.py: Elo por Bradley-Terry todos contra todos y sustituto neuronal (R2 0,77 en 51.200 muestras) cuyo gradiente da la"
+        }
+      ]
+    },
+    {
+      "id": "T-012",
+      "texto": "Política neuronal entrenada con PPO y exportable a C",
+      "huella": "5243fdd75fb42296",
+      "origen": {
+        "fichero": null,
+        "linea": null,
+        "lista": "claude"
+      },
+      "estado": "hecha",
+      "prioridad": "media",
+      "responsable": "claude",
+      "etiquetas": [],
+      "criterio": "",
+      "depende_de": [],
+      "padre": "T-003",
+      "creada": "2026-09-13T08:01:49-06:00",
+      "actualizada": "2026-09-13T09:00:44-06:00",
+      "evidencia": [
+        {
+          "fecha": "2026-09-13T09:00:44-06:00",
+          "texto": "PPO: 315 M pasos en 490 s; gana el combate a static, charger, spinner y v0.1-v0.3.0 (98-100 %) pero pierde contra v0.3.1; actor exportado a C99 (5.698 pesos, 22 KB, error máximo 5e-7). Sin probar en Webots",
+          "rutas": [
+            "Mini-Sumo/ml/ppo.py",
+            "Mini-Sumo/ml/data/politicas/p-20260913-084929-reglamento-1/nn_politica.h"
+          ]
+        }
+      ],
+      "notas": [],
+      "historial": [
+        {
+          "fecha": "2026-09-13T08:42:50-06:00",
+          "de": "pendiente",
+          "a": "en_curso",
+          "motivo": ""
+        },
+        {
+          "fecha": "2026-09-13T09:00:44-06:00",
+          "de": "en_curso",
+          "a": "hecha",
+          "motivo": "PPO: 315 M pasos en 490 s; gana el combate a static, charger, spinner y v0.1-v0.3.0 (98-100 %) pero pierde contra v0.3.1"
+        }
+      ]
+    },
+    {
+      "id": "T-013",
+      "texto": "Interfaz local de votos A/B con repeticiones de asaltos",
+      "huella": "d5b8aa50c9ae17f6",
+      "origen": {
+        "fichero": null,
+        "linea": null,
+        "lista": "claude"
+      },
+      "estado": "hecha",
+      "prioridad": "alta",
+      "responsable": "claude",
+      "etiquetas": [],
+      "criterio": "",
+      "depende_de": [],
+      "padre": "T-006",
+      "creada": "2026-09-13T08:01:50-06:00",
+      "actualizada": "2026-09-13T08:58:44-06:00",
+      "evidencia": [
+        {
+          "fecha": "2026-09-13T08:58:44-06:00",
+          "texto": "Interfaz en ml/web servida por ml/servidor.py (:8765): repeticiones A/B sincronizadas, voto con clic y teclado, etiquetas y nota; probada en el navegador con datos de prueba",
+          "rutas": [
+            "Mini-Sumo/ml/web/app.js",
+            "Mini-Sumo/ml/servidor.py"
+          ]
+        }
+      ],
+      "notas": [],
+      "historial": [
+        {
+          "fecha": "2026-09-13T08:58:44-06:00",
+          "de": "pendiente",
+          "a": "hecha",
+          "motivo": "Interfaz en ml/web servida por ml/servidor.py (:8765): repeticiones A/B sincronizadas, voto con clic y teclado, etiqueta"
+        }
+      ]
+    }
+  ]
+}

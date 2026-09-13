@@ -1,0 +1,13 @@
+Lista de tareas por cumplir en el proyecto 13-09-26 V1
+
+Leer el reglamento
+
+Ajustar el proyecto que llevamos hasta ahora dependiendo de lo que dice el reglamento
+
+Realizar un modelo de aprendizaje supervizado por refuerzo de cada algoritmo 
+
+Ir al directorio de Gelatina_Nuclear/codex y utilizar unicamente la pagina web para mostrar los cambios de los algoritmos
+
+realizar demasiadas simulaciones de los algoritmos que corran en la GPU
+
+Ir dando retroalimentacion al modelo
